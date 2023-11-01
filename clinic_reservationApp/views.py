@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Doctor
+from .models import Doctor, Patient
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .serializers import DoctorSerializer
@@ -13,19 +13,51 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
 @csrf_exempt
-@api_view(('POST',))
+@api_view(("GET",))
+def login(request):
+    if request.method == "GET":
+        user = JSONParser().parse(request)
+        username = request.data["username"]
+        password = request.data["password"]
+        hashedPassword = sha256_hash(password)
+        doctors = listDoctors()
+        for doctor in doctors:
+            if (
+                doctor.DoctorUserName == username
+                and doctor.DoctorHashedPassword == hashedPassword
+            ):
+                return JsonResponse({"status": True})
+        patients = Patient.objects.all()
+        for patient in patients:
+            if (
+                patient.PatientUserName == username
+                and patient.PatientHashedPassword == hashedPassword
+            ):
+                return JsonResponse({"status": True})
+        return Response(
+            "User not registered, sign up and try again",
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+@csrf_exempt
+@api_view(("POST",))
 def AddDoctor(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         doc = JSONParser().parse(request)
         serializer = DoctorSerializer(data=doc)
 
         if serializer.is_valid():
             # Check if the username is unique
-            doctor_username = serializer.validated_data.get('DoctorUserName')
+            doctor_username = serializer.validated_data.get("DoctorUserName")
+            # doctor_password = serializer.validated_data.get("DoctorHashedPAssword")
             if Doctor.objects.filter(DoctorUserName=doctor_username).exists():
-                return Response("Username already exists. Please choose a different one.", status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response(
+                    "Username already exists. Please choose a different one.",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             # Save the new Doctor instance
             serializer.save()
             return Response("Doctor added successfully", status=status.HTTP_201_CREATED)
@@ -33,10 +65,17 @@ def AddDoctor(request):
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-
+# user.set_password(user.password)
+# role = serializer.validated_data['role']
+# user = serializer.save()
+#
 def listDoctors(request):
     doc = Doctor.objects.all()
     return doc
 
+
 def sha256_hash(password):
-    encoded = password.encode('ut')
+    encoded = password.encode("utf-8")
+    sha256 = hashlib.sha256()
+    sha256.update(encoded)
+    return sha256.hexdigest()
