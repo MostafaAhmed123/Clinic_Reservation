@@ -11,16 +11,15 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 # Create your views here.
-
-
 @csrf_exempt
-@api_view(("GET",))
+@api_view(("POST",))
 def login(request):
-    if request.method == "GET":
+    if request.method == "POST":
         user = JSONParser().parse(request)
-        username = request.data["username"]
-        password = request.data["password"]
+        username = user.get("username")
+        password = user.get("password")
         hashedPassword = sha256_hash(password)
         doctors = listDoctors()
         for doctor in doctors:
@@ -40,6 +39,8 @@ def login(request):
             "User not registered, sign up and try again",
             status=status.HTTP_400_BAD_REQUEST,
         )
+    return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 
 @csrf_exempt
@@ -65,11 +66,12 @@ def AddDoctor(request):
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+
 # user.set_password(user.password)
 # role = serializer.validated_data['role']
 # user = serializer.save()
 #
-def listDoctors(request):
+def listDoctors():
     doc = Doctor.objects.all()
     return doc
 
