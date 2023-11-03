@@ -4,6 +4,7 @@ from clinic_reservationApp import views
 
 urlpatterns = [
     re_path(r"^doctor/addDoctor$", views.AddDoctor),
+    re_path(r"^patient/addPatient$", views.AddPatient),
     # re_path(r'^department/([0-9]+)$',views.departmentApi)
     re_path(r"^user/login$", views.login),
 ]

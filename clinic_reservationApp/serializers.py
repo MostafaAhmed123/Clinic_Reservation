@@ -45,12 +45,18 @@ class PatientSerializer(serializers.ModelSerializer):
         )
     def create(self, validated_data):
         # Hash the password before saving it
-        password = validated_data.get("DoctorHashedPassword")
+        password = validated_data.get("PatientHashedPassword")
         if password:
-            validated_data["DoctorHashedPassword"] = self.sha256_hash(password)
+            validated_data["PatientHashedPassword"] = self.sha256_hash(password)
 
-        return super(DoctorSerializer, self).create(validated_data)
+        return super(PatientSerializer, self).create(validated_data)
 
+    @staticmethod
+    def sha256_hash(password):
+        encoded = password.encode("utf-8")
+        sha256 = hashlib.sha256()
+        sha256.update(encoded)
+        return sha256.hexdigest()
 
 class SlotSerializer(serializers.ModelSerializer):
     class Meta:
