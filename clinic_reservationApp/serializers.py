@@ -43,6 +43,13 @@ class PatientSerializer(serializers.ModelSerializer):
             "PatientHashedPassword",
             "PatientMdedicalHistory",
         )
+    def create(self, validated_data):
+        # Hash the password before saving it
+        password = validated_data.get("DoctorHashedPassword")
+        if password:
+            validated_data["DoctorHashedPassword"] = self.sha256_hash(password)
+
+        return super(DoctorSerializer, self).create(validated_data)
 
 
 class SlotSerializer(serializers.ModelSerializer):
@@ -58,7 +65,6 @@ class SlotSerializer(serializers.ModelSerializer):
             "StartTime",
             "EndTime",
         )
-
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
