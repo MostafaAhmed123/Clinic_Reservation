@@ -65,14 +65,25 @@ class SlotSerializer(serializers.ModelSerializer):
             "SlotId",
             "Date",
             "Is_available",
-            "DoctorId",
+            # "DoctorId",
             "doctorSlotFK",
-            "StartTime",
             "StartTime",
             "EndTime",
         )
+
+class AvailableSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slot
+        fields = ('Date', 'StartTime', 'EndTime')
+
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ("AppointmentId", "AppointmentSlotNumber", "AppointmentPatientID")
+
+
+class DoctorNameSpecialtySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ('DoctorName', 'DoctorSpecialty')

@@ -18,8 +18,8 @@ class Patient(models.Model):
 class Slot(models.Model):
     SlotId = models.AutoField(primary_key = True)
     Date = models.DateField()
-    Is_available = models.BinaryField()
-    DoctorId = models.IntegerField()
+    Is_available = models.BooleanField()
+    # DoctorId = models.IntegerField()
     doctorSlotFK = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     StartTime = models.TimeField()
     EndTime = models.TimeField()
