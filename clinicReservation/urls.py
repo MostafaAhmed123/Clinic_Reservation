@@ -17,16 +17,15 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path
-import clinic_reservationApp.Controllers.DoctorController
-from clinic_reservationApp  import views
+from clinic_reservationApp import views
 from django.contrib import admin
 from django.conf.urls import include
 from django.urls import re_path
+
 if settings.DEBUG:
     import debug_toolbar
 urlpatterns = [
-    path('admin/', admin.site.urls),
-            path('__debug__/', include(debug_toolbar.urls)),
-
-    re_path(r'^',include('clinic_reservationApp.urls'))
+    path("admin/", admin.site.urls),
+    path("__debug__/", include(debug_toolbar.urls)),
+    re_path(r"^", include("clinic_reservationApp.urls")),
 ]
