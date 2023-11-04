@@ -1,4 +1,3 @@
-from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
@@ -41,8 +40,6 @@ def login(request):
         )
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-
-
 @csrf_exempt
 @api_view(("POST",))
 def AddDoctor(request):
@@ -84,6 +81,7 @@ def AddPatient(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
 @csrf_exempt
 @api_view(("POST",))
 def create_slot(request):
@@ -96,7 +94,6 @@ def create_slot(request):
             # Check if the doctor exists
             if not Doctor.objects.filter(DoctorId=doctor_id).exists():
                 return Response("Doctor not found", status=status.HTTP_400_BAD_REQUEST)
-
             # Check for existing slots with the same start and end times on the same day for the same doctor
             date = slot_data.get("Date")
             start_time = slot_data.get("StartTime")
@@ -123,20 +120,120 @@ def list_doctor_names_specialties(request):
     serializer = DoctorNameSpecialtySerializer(doctors, many=True)
     return Response(serializer.data)
 
+
 @csrf_exempt
 @api_view(['GET'])
 def view_available_slots(request):
     doctor_name = request.query_params.get('doctor_name')
     doctor_speciality = request.query_params.get('doctor_speciality')
-
     try:
         doctor = Doctor.objects.get(DoctorName=doctor_name, DoctorSpecialty=doctor_speciality)
         available_slots = Slot.objects.filter(doctorSlotFK=doctor, Is_available=1)
-        serializer = SlotSerializer(available_slots, many=True)
-        return Response(serializer.data)
+
+        if available_slots.exists():
+            serializer = SlotSerializer(available_slots, many=True)
+            return Response(serializer.data)
+        else:
+            return Response("No available slots for this doctor", status=status.HTTP_200_OK)
     except Doctor.DoesNotExist:
         return Response("Doctor not found", status=status.HTTP_404_NOT_FOUND)
+        
+    
+@csrf_exempt
+@api_view(['POST'])
+def choose_slot(request):
+    parser = JSONParser().parse(request)
+    patient_username = parser.get('patient_username')
+    doctor_name = parser.get('doctor_name')
+    doctor_speciality = parser.get('doctor_speciality')
+    date = parser.get('date')
+    startTime = parser.get('StartTime')
+    endTime = parser.get('EndTime')
 
+    try:
+        patient = Patient.objects.get(PatientUserName=patient_username)
+        doctor = Doctor.objects.get(DoctorName=doctor_name, DoctorSpecialty=doctor_speciality)
+        slot = Slot.objects.get(
+            doctorSlotFK=doctor,
+            Date=date,
+            StartTime=startTime,
+            EndTime=endTime,
+            Is_available=True
+        )
+
+        # Create a new appointment for the patient with the chosen slot
+        appointment_data = {
+            "AppointmentSlotNumber": slot.SlotId,
+            "AppointmentPatientID": patient.PatientId
+        }
+
+        appointment_serializer = AppointmentSerializer(data=appointment_data)
+        if appointment_serializer.is_valid():
+            appointment_serializer.save()
+            # Mark the slot as unavailable
+            slot.Is_available = False
+            slot.save()
+            return Response("Slot chosen successfully", status=status.HTTP_201_CREATED)
+        else:
+            return Response(appointment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Patient.DoesNotExist:
+        return Response("Patient not found", status=status.HTTP_404_NOT_FOUND)
+    except Doctor.DoesNotExist:
+        return Response("Doctor not found", status=status.HTTP_404_NOT_FOUND)
+    except Slot.DoesNotExist:
+        return Response("Slot not found or not available", status=status.HTTP_400_BAD_REQUEST)
+    
+
+@csrf_exempt
+@api_view(['DELETE'])
+def cancel_appointment(request):
+    parser = JSONParser().parse(request)
+    patientUsername = parser.get('patientUsername')
+    appointmentId = parser.get('appointmentId')  # Fixed the typo in the variable name
+
+    try:
+        patient = Patient.objects.get(PatientUserName=patientUsername)
+        appointment = Appointment.objects.get(AppointmentId=appointmentId, AppointmentPatientID=patient)
+        slot = appointment.AppointmentSlotNumber  # Retrieve the Slot object
+
+        # Check if the slot is available (this may depend on your model structure)
+        if slot.Is_available:
+            return Response("Slot is already available", status=status.HTTP_400_BAD_REQUEST)
+        # Set the slot as available
+        slot.Is_available = True
+        slot.save()
+        # Delete the appointment
+        appointment.delete()
+        return Response("Appointment canceled successfully")
+    except Appointment.DoesNotExist:
+        return Response("Appointment Not Found", status=status.HTTP_400_BAD_REQUEST)
+    except Patient.DoesNotExist:
+        return Response("Patient not found", status=status.HTTP_404_NOT_FOUND)
+
+@csrf_exempt
+@api_view(['PUT'])
+def editAppointment(request):
+    parser = JSONParser().parse(request)
+    appointmentID = parser.get('appointment_id')
+    appointment = Appointment.objects.get(AppointmentId = appointmentID)
+    slot = appointment.AppointmentSlotNumber
+    # slot = Slot.objects.get(SlotId = slotNo)
+    slot.Is_available = True
+    slot.save()
+    slot2 = Slot.objects.get(SlotId = parser.get('slot_id'))
+    appointment.AppointmentSlotNumber = slot2
+    slot2.Is_available = False
+    slot2.save()
+    appointment.save()
+    return Response("Appointment edited successfully")
+
+@csrf_exempt
+@api_view(['GET'])
+def listPatientReservation(request):
+    patient_id = request.query_params.get('id')
+    appointments = Appointment.objects.filter(AppointmentPatientID=patient_id)
+    appointment_serializer = AppointmentSerializer(appointments, many=True)
+    return Response(appointment_serializer.data)
 
 def listDoctors():
     doc = Doctor.objects.all()

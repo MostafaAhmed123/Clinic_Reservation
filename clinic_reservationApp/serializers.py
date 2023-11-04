@@ -71,12 +71,6 @@ class SlotSerializer(serializers.ModelSerializer):
             "EndTime",
         )
 
-class AvailableSlotSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Slot
-        fields = ('Date', 'StartTime', 'EndTime')
-
-
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
