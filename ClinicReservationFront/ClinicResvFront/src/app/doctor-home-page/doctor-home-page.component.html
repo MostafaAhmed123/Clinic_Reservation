@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>HomeDoctor</title>
+</head>
+<body>
+   <nav>
+        <div class="navbar">
+                <a href="#">MediGenius</a>
+            <ul class="links">
+                <li>
+                    <button class="btn transparent" id = "sign-out-btn" (click)="navigateToLogin()">Log out</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="table-container">
+    <div class="table">
+        <div class="table_header">
+            <p>My Slots</p>
+            <div>
+                <input placeholder="Slot">
+                <div class="wrapper">
+                <button class="add_new" (click)="openPop()">+ Add New</button>
+            </div>
+            </div>
+        </div>
+        <div class="table_section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10/11/2023</td>
+                        <td>1:00 PM</td>
+                        <td>
+                            <button (click)="editSlot"><i class="fas fa-pen-to-square"></i></button>
+                            <button ><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>10/11/2023</td>
+                        <td>1:00 PM</td>
+                        <td>
+                            <button><i class="fas fa-pen-to-square"></i></button>
+                            <button><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="show">
+        <div class="content" >
+            <div class="close" (click)="closePop()">
+                &times;
+            </div>
+            <label for="date" class="label"> Date & Time : </label><br>
+           <input type="datetime-local" name="Time" id="Time" class = "form-control" required>
+           <input type="submit" value="Submit" class="submit">
+        </div>
+    </div>
+</div>
+</body>
+</html>

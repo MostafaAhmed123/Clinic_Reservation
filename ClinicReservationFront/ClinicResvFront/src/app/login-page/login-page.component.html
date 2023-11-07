@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+<div class="container">
+    <div class="forms-container">
+        <div class="signin-signup">
+            <form action="" autocomplete="on" class="sign-in-form">
+                <h2 class="title">Sign in</h2><br>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Enter your username" required><br>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="Password" id="Password" placeholder="Enter your Password" required><br>
+                </div>
+                <br>
+                <!-- <div class="Radio-field">
+                    <input type="radio" name="role" id="Doctor" checked="checked">
+                    <label for="Doctor">Doctor</label>
+                    <input type="radio" name="role" id="Patient">
+                    <label for="Patient">Patient</label>               
+                 </div>
+                 <br> -->
+                <input type="submit" value="Sign in" class="btn solid">
+            </form>
+        </div>
+    </div>
+    <div class="panels-container">
+        <div class="panel left-panel">
+            <div class="content">
+                <h3>New here ?</h3>
+                <p>Join us today and discover the world of healthcare!</p>
+                <button class="btn transparent" id = "sign-up-btn-patient" (click)="navigateToPatientSignUp()">Patient</button>
+                <button class="btn transparent" id = "sign-up-btn-doctor" (click)="navigateToDoctorSignUp()">Doctor</button>
+
+            </div>
+            <img src="../assets/Images/undraw_medical_research_qg4d.svg" alt="" class="image">
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
