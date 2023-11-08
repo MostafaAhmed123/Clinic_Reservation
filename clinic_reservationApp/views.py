@@ -1,3 +1,4 @@
+from pymysql import NULL
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
@@ -19,6 +20,7 @@ def login(request):
         user = JSONParser().parse(request)
         username = user.get("username")
         password = user.get("password")
+        
         hashedPassword = sha256_hash(password)
         doctors = listDoctors()
         for doctor in doctors:
@@ -33,9 +35,10 @@ def login(request):
                 patient.PatientUserName == username
                 and patient.PatientHashedPassword == hashedPassword
             ):
-                return JsonResponse({"status": True})
+                return JsonResponse({"status": True},status=status.HTTP_200_OK)
+        print(username)
         return Response(
-            "User not registered, sign up and try again",
+            "User not registered, sign up and try again" ,
             status=status.HTTP_400_BAD_REQUEST,
         )
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)

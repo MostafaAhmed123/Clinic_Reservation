@@ -12,6 +12,7 @@ import {PatientSignUpComponent} from './patient-sign-up/patient-sign-up.componen
 import {RouterModule} from '@angular/router';
 import { EditSlotComponent } from './edit-slot/edit-slot.component'
 import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { LoginPageComponent } from './login-page/login-page.component';
 
 @NgModule({
   declarations: [
@@ -19,12 +20,12 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule
     DoctorHomePageComponent,
     PatientHomePageComponent,
     EditSlotComponent,
+    LoginPageComponent
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
     MaterialModel,
     HttpClientModule,
     FormsModule,

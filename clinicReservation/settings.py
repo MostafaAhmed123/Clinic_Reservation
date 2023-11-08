@@ -86,7 +86,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "clinic",
         "USER": "root",
-        "PASSWORD": "mostafa@123",
+        "PASSWORD": "h_Kd16*23132",
         "HOST": "127.0.0.1",
         "PORT": "3306",
     }
@@ -138,6 +138,13 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    # Add other allowed origins here if needed
+]
 
 
 # Static files (CSS, JavaScript, Images)
