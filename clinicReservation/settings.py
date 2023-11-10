@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "clinic_reservationApp.apps.ClinicReservationConfig",
     "debug_toolbar",
+    "background_task",
 ]
+
+BACKGROUND_TASK_RUN_ASYNC = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -104,6 +107,8 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.signals.SignalsPanel",
     "debug_toolbar.panels.logging.LoggingPanel",
 ]
+
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -127,7 +132,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+KAFKA_CONFIG = {
+    "bootstrap_servers": "kafka-broker1:9092,kafka-broker2:9092,kafka-broker3:9092",
+    "group_id": "your_consumer_group_id",
+    "auto_offset_reset": "earliest",
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
