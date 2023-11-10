@@ -28,15 +28,19 @@ def login(request):
                 doctor.DoctorUserName == username
                 and doctor.DoctorHashedPassword == hashedPassword
             ):
-                return JsonResponse({"Type": "Doctor"}, status=status.HTTP_200_OK)
+                return JsonResponse(
+                    {"Type": "Doctor", "ID": doctor.DoctorId}, status=status.HTTP_200_OK
+                )
         patients = Patient.objects.all()
         for patient in patients:
             if (
                 patient.PatientUserName == username
                 and patient.PatientHashedPassword == hashedPassword
             ):
-                return JsonResponse({"Type": "Patient"}, status=status.HTTP_200_OK)
-        print(username)
+                return JsonResponse(
+                    {"Type": "Patient", "ID": patient.PatientId},
+                    status=status.HTTP_200_OK,
+                )
         return Response(
             "User not registered, sign up and try again",
             status=status.HTTP_400_BAD_REQUEST,
@@ -97,6 +101,36 @@ def AddPatient(request):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@csrf_exempt
+@api_view(["GET"])
+def getUser(request):
+    user = JSONParser().parse(request)
+    userType = user.get("Type")
+    userID = user.get("ID")
+    if userType == "Doctor":
+        try:
+            doctor = Doctor.objects.get(DoctorId=userID)
+            data = DoctorSerializer(data=doctor).data
+            return JsonResponse(data, status=status.HTTP_200_OK)
+        except:
+            return JsonResponse(
+                {"error": "No such User"}, status=status.HTTP_404_NOT_FOUND
+            )
+    elif userType == "Patient":
+        try:
+            patient = Patient.objects.get(PatientId=userID)
+            data = PatientSerializer(data=patient).data
+            return JsonResponse(data, status=status.HTTP_200_OK)
+        except:
+            return JsonResponse(
+                {"error": "No such User"}, status=status.HTTP_404_NOT_FOUND
+            )
+    else:
+        return JsonResponse(
+            {"error": "Invalid Type"}, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @csrf_exempt
@@ -164,6 +198,39 @@ def view_available_slots(request):
             )
     except Doctor.DoesNotExist:
         return Response("Doctor not found", status=status.HTTP_404_NOT_FOUND)
+
+
+def is_done(slot):
+    if slot.Date > date.today():
+        return False
+    elif slot.Date < date.today():
+        return True
+    elif slot.StartTime < datetime.now():
+        return True
+    else:
+        return False
+
+
+@csrf_exempt
+@api_view(["DELETE"])
+def deleteSlot(request):
+    id = request.query_params.get("id")
+    try:
+        slot = Slot.objects.get(SlotId=id)
+        if is_done(slot):
+            return Response(
+                "Cannot cancel a past or ongoing appointment",
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        appiontments = Appointment.objects.filter(AppointmentSlotNumber=id)
+        if len(appiontments) > 0:
+            return Response(
+                "Cannot cancel occupied slot", status=status.HTTP_403_FORBIDDEN
+            )
+        slot.delete()
+        return Response("Successfully deleted slot", status=status.HTTP_200_OK)
+    except:
+        return Response(status=status.HTTP_304_NOT_MODIFIED)
 
 
 @csrf_exempt
