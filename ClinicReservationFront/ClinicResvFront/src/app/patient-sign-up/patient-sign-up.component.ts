@@ -1,8 +1,6 @@
+// patient-sign-up.component.ts
 import { Component } from '@angular/core';
-import {FormBuilder,Validators,FormGroup} from '@angular/forms';
-import {ToastrService} from 'ngx-toastr';
-import { AbstractControl } from '@angular/forms';
-import { AuthComponent } from '../service/auth/auth.component';
+import { PatientSignUpService } from '../patient-sign-up.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,40 +9,37 @@ import { Router } from '@angular/router';
   styleUrls: ['./patient-sign-up.component.scss']
 })
 export class PatientSignUpComponent {
-// constructor(private builder:FormBuilder, private toastr:ToastrService,private service:AuthComponent, private router: Router){
-  constructor(private router: Router) {} 
-navigateToLogin() {
-    // Use the Angular Router to navigate to the "patientSignUp" route
+    patientName: string = '';
+    patientUserName: string = '';
+    patientHashedPassword:string = '';
+    confirmPassword:string = '';
+    patientMedicalHistory:string = '';
+
+  constructor(private router: Router, private PatientSignUpService: PatientSignUpService ) {}
+
+  proceedPatientSignUp() {
+    if (this.patientHashedPassword !== this.confirmPassword) {
+      alert('Passwords do not match. Please try again.');
+      return;
+    }
+    const patient = {
+      patientName: this.patientName,
+      patientUserName: this.patientUserName,
+      patientHashedPassword: this.patientHashedPassword,
+      patientMedicalHistory: this.patientMedicalHistory
+    };
+
+      this.PatientSignUpService.addPatient(patient).subscribe(
+        () => {
+          alert('Registered Successfully');
+          this.router.navigate(['./patientHomePage']);
+        },
+        (error) => {
+          alert('Error adding patient: ' + error);
+        }
+      );
+    }
+    navigateToLogin() {
     this.router.navigate(['/login']);
   }
-}
-// patientSignUpForm = this.builder.group({
-//   name:this.builder.control('',Validators.required),
-//   userName:this.builder.control('',Validators.required),
-//   Password:this.builder.control('',Validators.compose([Validators.required,Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)])),
-//   ConfirmPassword:this.builder.control('',[
-//     Validators.required,
-//     this.passwordMatchValidator
-//   ]),
-//   MedicalHistory:this.builder.control('')
-// });
-
-// passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
-//   const password = this.patientSignUpForm.get('Password')?.value;
-//   const confirmPassword = control.value;
-
-//   return password === confirmPassword ? null : { mismatch: true };
-// }
-
-// proceedPatientSignUp(){
-//   if(!this.patientSignUpForm.valid){
-//     this.service.ProceedSignUp(this.patientSignUpForm.value).subscribe(res =>{
-//       this.toastr.success('Registered Sucessfully');
-//       this.router.navigate(['patientHomePage']);
-//     });
-//   }
-//   else{
-//     this.toastr.warning('Please Enter Valid Data');
-//   }
-// }
-// }
+  }

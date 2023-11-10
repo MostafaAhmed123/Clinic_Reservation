@@ -9,29 +9,28 @@
     <div class="container">
     <div class="forms-container">
      <div class="signin-signup">
-    <form action="" autocomplete="on" class="sign-up-form">
+    <form (ngSubmit)="submitForm()" autocomplete="on" class="sign-up-form">
         <h2 class="title">Doctor Sign up</h2>
         <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" name="name" placeholder="E.g Hanna Ayman" required><br>
+            <input type="text" [(ngModel)]="doctorName" name="name" placeholder="First Name" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" name="username" placeholder="Choose a unique username" required><br>
+            <input type="text" [(ngModel)]="doctorUsername"  name="username" placeholder="Unique username" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-lock"></i>
-            <input type="password" name="Password" id="Password" placeholder="Must be 8 Characters or more" required><br>
+            <input type="password" [(ngModel)]="doctorPassword" name="Password" id="Password" placeholder="Password" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-lock"></i>
-            <input type="password" id="confirmPass" name="confirmPass" placeholder="Confirm Password" required><br>
+            <input type="password" id="confirmPass" [(ngModel)]="confirmPassword" name="confirmPass" placeholder="Confirm Password" required><br>
         </div>
         <div class="input-field">
                 <i class="fas fa-user-md"></i>
             <div class="select-container">
-            <select id="specialty" name="specialty">
-                <option value="spec">Speciality</option>
+            <select id="specialty" [(ngModel)]="doctorSpecialty" name="specialty">
                 <option value="cardiologist">Cardiologist</option>
                 <option value="dermatologist">Dermatologist</option>
                 <option value="dentist">Dentist</option>

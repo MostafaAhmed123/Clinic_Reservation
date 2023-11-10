@@ -1,1 +1,71 @@
-<p>patient-home-page works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>HomePatient</title>
+</head>
+<body>
+   <nav>
+        <div class="navbar">
+                <a href="#">MediGenius</a>
+            <ul class="links">
+                <li>
+                    <button class="btn transparent" id = "sign-out-btn" (click)="navigateToLogin()">Log out</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="table-container">
+    <div class="table">
+        <div class="table_header">
+            <p>My Appointments</p>
+            <div>
+                <div class="wrapper">
+                <button class="add_new" (click)="openPop()">+ Add New</button>
+            </div>
+            </div>
+        </div>
+        <div class="table_section">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">appointment</th>
+                        <th colspan="3">Doctor></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let appointment of appointments" >
+                        <td>{{appointment.date}}</td>
+                        <td>{{ appointment.startTime}} </td>
+                        <td>{{ appointment.doctorName}} </td>
+                        
+                        <td>
+                            <button (click)="editSlot(appointment)"><i class="fas fa-pen-to-square"></i></button>
+                            <button (click)="deleteSlot(appointment)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="show">
+        <div class="content" >
+            <div class="close" (click)="closePop()">
+                &times;
+            </div>
+            <label for="date" class="label"> Date : </label><br>
+           <input type="date" [(ngModel)]="newAppDate" name="Time" id="Time" class = "form-control" required><br><br>
+           <label for="date" class="label"> Start Time : </label><br>
+           <input type="time" [(ngModel)]="newAppTime" name="startTime" id="startTime" class = "form-control" required><br><br>
+           <label for="date" class="label"> Doctor : </label><br>
+           <select [(ngModel)]="doctor" name="doctor" id="doctor" class="form-control" required>
+             <option *ngFor="let doc of availableDoctors" [value]="doc.DoctorName">{{ doc.DoctorName }}</option>
+           </select><br><br>           
+           <input type="submit" value="Submit" class="submit" (click)="addAppointment(newAppDate,newAppTime,doctor)">
+        </div>
+    </div>
+</div>
+</body>
+</html>

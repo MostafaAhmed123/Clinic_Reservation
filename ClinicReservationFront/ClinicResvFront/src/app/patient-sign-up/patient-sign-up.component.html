@@ -9,27 +9,27 @@
     <div class="container">
     <div class="forms-container">
      <div class="signin-signup">
-    <form action="" autocomplete="on" class="sign-up-form">
+    <form (ngSubmit)="proceedPatientSignUp()" autocomplete="on" class="sign-up-form">
         <h2 class="title">Patient Sign up</h2>
         <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" name="name" placeholder="E.g Hanna Ayman" required><br>
+            <input type="text" [(ngModel)]="patientName" name="PatientName" placeholder="First Name" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" name="username" placeholder="Choose a unique username" required><br>
+            <input type="text" [(ngModel)]="patientUserName"  name="username" placeholder="Unique username" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-lock"></i>
-            <input type="password" name="Password" id="Password" placeholder="Must be 8 Characters or more" required><br>
+            <input type="password" [(ngModel)]="patientHashedPassword" name="Password" id="Password" placeholder="Password" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-lock"></i>
-            <input type="password" id="confirmPass" name="confirmPass" placeholder="Confirm Password" required><br>
+            <input type="password" [(ngModel)]="confirmPassword" id="confirmPass" name="confirmPass" placeholder="Confirm Password" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-notes-medical"></i>
-            <textarea name="MedicalHistory" id="MedicalHistory" cols="20" rows="10" placeholder="Enter your Medical History"></textarea>
+            <textarea name="MedicalHistory" [(ngModel)]="patientMedicalHistory" id="MedicalHistory" cols="20" rows="10" placeholder="Enter your Medical History"></textarea>
         </div>    
         <input type="submit" value="Sign up" class="btn solid">
     </form>

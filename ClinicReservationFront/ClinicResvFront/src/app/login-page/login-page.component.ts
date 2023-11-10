@@ -18,12 +18,11 @@ loginForm: any;
     ) {}
     login(event: Event) {
       event.preventDefault(); // Prevent the default form submission behavior
-      console.log("ghfhgfhjf"+this.username);
       this.userLoginService.login(this.username, this.password).subscribe(
         (response) => {
           console.log(response);
           // Handle the response here, e.g., set user login status or show a message.
-          if (response.status) {
+          if (response.Type == "Doctor") {
             this.toastr.success('Login successful!', 'Success');
             // You can also navigate the user to another page here if needed
             this.router.navigate(['/doctorHomePage']);

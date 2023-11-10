@@ -13,6 +13,8 @@ import {RouterModule} from '@angular/router';
 import { EditSlotComponent } from './edit-slot/edit-slot.component'
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { LoginPageComponent } from './login-page/login-page.component';
+import {DoctorSignUpComponent} from './doctor-sign-up/doctor-sign-up.component'
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,10 +22,13 @@ import { LoginPageComponent } from './login-page/login-page.component';
     DoctorHomePageComponent,
     PatientHomePageComponent,
     EditSlotComponent,
-    LoginPageComponent
-    
+    LoginPageComponent,
+    DoctorSignUpComponent,
+    PatientSignUpComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     MaterialModel,
