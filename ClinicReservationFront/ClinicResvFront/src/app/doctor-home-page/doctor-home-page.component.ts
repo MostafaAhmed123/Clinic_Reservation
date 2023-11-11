@@ -139,10 +139,23 @@ export class DoctorHomePageComponent implements OnInit {
   deleteSlot(slot: any) {
     const confirmation = confirm('Are you sure you want to delete this slot?');
     if (confirmation) {
-      const index = this.slots.indexOf(slot);
-      if (index !== -1) {
-        this.slots.splice(index, 1);
-      }
+      const slotId = slot.SlotId; // Assuming SlotId is the correct property name
+      console.log(slotId);
+
+      this.doctorHomePageService.deleteSlot(slotId).subscribe(
+        () => {
+          this.toastr.success('Slot deleted successfully!', 'Success');
+          const index = this.slots.indexOf(slot);
+          if (index !== -1) {
+            this.slots.splice(index, 1);
+          }
+        },
+        (error) => {
+          console.error('Error deleting slot:', error);
+          this.toastr.error('Failed to delete slot. Please try again later.', 'Error');
+        }
+      );
+
     }
   }
 }

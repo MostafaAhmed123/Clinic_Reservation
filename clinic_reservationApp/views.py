@@ -1,3 +1,7 @@
+from datetime import date
+import datetime
+import json
+from pyexpat.errors import messages
 from pymysql import NULL
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
@@ -271,13 +275,13 @@ def choose_slot(request):
             # Mark the slot as unavailable
             slot.Is_available = False
             slot.save()
-            kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
+            # kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
             message = {
                 "doctorId": doctor,
                 "patientId": patient.PatientId,
                 "Operation": "ReservationCreated",
             }
-            kafka_producer.produce_message("clinic_reservation", str(message))
+            # kafka_producer.produce_message("clinic_reservation", str(message))
             return Response("Slot chosen successfully", status=status.HTTP_201_CREATED)
         else:
             return Response(
@@ -317,13 +321,13 @@ def cancel_appointment(request):
         slot.save()
         # Delete the appointment
         appointment.delete()
-        kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
+        #kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
         message = {
             "doctorId": slot.doctorSlotFK,
             "patientId": patient,
             "Operation": "ReservationCancelled",
         }
-        kafka_producer.produce_message("clinic_reservation", str(message))
+       # kafka_producer.produce_message("clinic_reservation", str(message))
         return Response("Appointment canceled successfully")
     except Appointment.DoesNotExist:
         return Response("Appointment Not Found", status=status.HTTP_400_BAD_REQUEST)
@@ -335,12 +339,12 @@ def cancel_appointment(request):
 @api_view(["GET"])
 def getDoctorNotifications(request):
     id = request.query_params.get("id")
-    kafka_consumer = KafkaConsumer(
-        settings.KAFKA_CONFIG["bootstrap_servers"],
-        settings.KAFKA_CONFIG["group_id"],
-        settings.KAFKA_CONFIG["auto_offset_reset"],
-    )
-    messages = kafka_consumer.consume_messages("clinic_reservation")
+    # kafka_consumer = KafkaConsumer(
+    #     settings.KAFKA_CONFIG["bootstrap_servers"],
+    #     settings.KAFKA_CONFIG["group_id"],
+    #     settings.KAFKA_CONFIG["auto_offset_reset"],
+    # )
+    # messages = kafka_consumer.consume_messages("clinic_reservation")
     res = []
     for message in messages:
         data = json.loads(message.value())
@@ -365,13 +369,13 @@ def editAppointment(request):
     slot2.Is_available = False
     slot2.save()
     appointment.save()
-    kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
+    # kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
     message = {
         "doctorId": slot.doctorSlotFK,
         "patientId": appointment.AppointmentPatientID,
         "Operation": "ReservationUpdated",
     }
-    kafka_producer.produce_message("clinic_reservation", str(message))
+    # kafka_producer.produce_message("clinic_reservation", str(message))
     return Response("Appointment edited successfully")
 
 

@@ -21,4 +21,8 @@ export class DoctorHomePageService {
     const url = `${this.baseUrl}/listDoctorsSlot`;
     return this.http.get(`${url}?id=${id}`);
   }
+  deleteSlot(id: number): Observable<any> {
+    const url = `${this.baseUrl}/deleteSlot`;
+    return this.http.delete(`${url}?id=${id}`);
+  }
 }
