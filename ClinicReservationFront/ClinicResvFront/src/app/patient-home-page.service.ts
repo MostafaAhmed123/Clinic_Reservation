@@ -32,4 +32,22 @@ export class AppointmentService {
     const url = `${this.apiUrl}/viewDoctorSlots`;
     return this.http.get<any[]>(`${url}?doctorId=${doctorId}`);
   }
+  list_patient_reservations(patient_username: string): Observable<any[]> {
+    const url = `${this.apiUrl}/listReservations`;
+    return this.http.get<any[]>(`${url}?patient_username=${patient_username}`);
+  }
+  editAppointment(appointmentData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/editAppointment`, appointmentData);
+  }
+  // deleteAppointment(appointmentData: any): Observable<any>{
+  //   return this.http.delete(`${this.apiUrl}`)
+  // }
+  cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
+    const cancelData = {
+      patientUsername: patientUsername,
+      appointmentId: appointmentId,
+    };
+
+    return this.http.delete(`${this.apiUrl}/cancelAppointment`, { body: cancelData });
+  }
 }

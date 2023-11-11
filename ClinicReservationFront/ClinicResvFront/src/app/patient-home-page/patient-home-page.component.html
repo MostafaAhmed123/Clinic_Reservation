@@ -32,21 +32,26 @@
                 <thead>
                     <tr>
                         <th colspan="2">Appointment</th>
-                        <th colspan="3">Doctor</th>
+                        <th colspan="2">Doctor</th>
+                        <th>Action</th>
+
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let appointment of appointments" >
-                        <td>{{appointment.date}}</td>
-                        <td>{{ appointment.startTime}} </td>
-                        <td>{{ appointment.doctorName}} </td>
-                        
-                        <td>
-                            <button (click)="editSlot(appointment)"><i class="fas fa-pen-to-square"></i></button>
-                            <button (click)="deleteSlot(appointment)"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
+<!-- ... (existing HTML) -->
+
+<tbody>
+    <tr *ngFor="let appointment of appointments" >
+      <td>{{appointment.date}}</td>
+      <td>{{ appointment.start_time}} </td>
+      <td colspan="2">{{ appointment.doctor_name}} </td>
+      
+      <td>
+        <button (click)="editSlot(appointment)"><i class="fas fa-pen-to-square"></i></button>
+        <button (click)="deleteSlot(appointment)"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  </tbody>
+  
             </table>
         </div>
     </div>

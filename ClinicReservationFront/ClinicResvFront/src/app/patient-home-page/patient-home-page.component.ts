@@ -29,8 +29,19 @@ export class PatientHomePageComponent implements OnInit {
     this.route.params.subscribe(params=>
       {this.username= params['username'];}
       );
+    this.getAppointments(); 
   }
-
+  
+  getAppointments() {
+    this.appointmentService.list_patient_reservations(this.username).subscribe(
+      (reservations) => {
+        this.appointments = reservations;
+      },
+      (error) => {
+        console.error('Error fetching patient reservations:', error);
+      }
+    );
+  }
   getAvailableDoctors() {
     this.appointmentService.getAvailableDoctors().subscribe(
       (doctors) => {
@@ -67,7 +78,6 @@ export class PatientHomePageComponent implements OnInit {
     }
   }
   
-
   closeSecondPop() {
     this.showSecondPop = false;
   }
@@ -81,6 +91,7 @@ export class PatientHomePageComponent implements OnInit {
         console.log('Appointment booked successfully');
         this.closePop();
         this.closeSecondPop(); // Close the second popup after successful booking
+        this.getAppointments();
       },
       (error) => {
         console.error('Error booking appointment:', error);
@@ -89,13 +100,40 @@ export class PatientHomePageComponent implements OnInit {
   }
   editSlot(appointment: any) {
     const confirmation = confirm('Are you sure you want to edit this slot?');
-    if (confirmation) {
-      // Implement edit logic here if needed
-    }
+  if (confirmation) {
+    // Open the first popup to select a new doctor
+    this.openPop();
+    
+    // Set the selected doctor based on the appointment
+    this.doctor = appointment.doctor_name;
+
+    // Set the selected slot based on the appointment
+    this.selectedSlot = appointment.slot_id;
+
+    // Open the second popup to select a new slot
+    this.openSecondPop();
+  }
+  }
+  editAppointment(appointment_id: number, new_slot_id: number) {
+    this.appointmentService.editAppointment({
+      appointment_id: appointment_id,
+      slot_id: new_slot_id
+    }).subscribe(
+      () => {
+        console.log('Appointment edited successfully');
+        this.closePop();
+        this.closeSecondPop(); // Close the second popup after successful editing
+        this.getAppointments();
+      },
+      (error) => {
+        console.error('Error editing appointment:', error);
+      }
+    );
   }
   navigateToLogin() {
     this.router.navigate(['/login']);
   }
+  
   deleteSlot(appointment: any) {
     const confirmation = confirm('Are you sure you want to delete this slot?');
     if (confirmation) {

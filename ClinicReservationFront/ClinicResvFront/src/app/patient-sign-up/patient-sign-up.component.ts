@@ -12,8 +12,8 @@ export class PatientSignUpComponent {
   PatientName: string = '';
   PatientUserName: string = '';
   PatientHashedPassword:string = '';
-    confirmPassword:string = '';
-    PatientMdedicalHistory:string = '';
+  confirmPassword:string = '';
+  PatientMdedicalHistory:string = '';
 
   constructor(private router: Router, private PatientSignUpService: PatientSignUpService ) {}
 
@@ -33,9 +33,11 @@ export class PatientSignUpComponent {
 
 this.PatientSignUpService.addPatient(patient).subscribe(
     () => {
+        const username = patient.PatientUserName;
         console.log('Registration Successful');
         alert('Registered Successfully');
-        this.router.navigate(['./patientHomePage']);
+        console.log(username);
+        this.router.navigate(['./patientHomePage', username]);
     },
     (error) => {
         console.error('Error adding patient:', error);
@@ -48,4 +50,4 @@ this.PatientSignUpService.addPatient(patient).subscribe(
     navigateToLogin() {
     this.router.navigate(['/login']);
   }
-  }
+}

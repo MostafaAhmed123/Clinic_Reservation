@@ -77,9 +77,18 @@ def AddDoctor(request):
                 )
             # Save the new Doctor instance
             serializer.save()
-            return Response("Doctor added successfully", status=status.HTTP_201_CREATED)
+
+            # Retrieve the ID and username of the newly added doctor
+            new_doctor = Doctor.objects.get(DoctorUserName=doctor_username)
+            response_data = {
+                "id": new_doctor.DoctorId,
+                "username": new_doctor.DoctorUserName,
+            }
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 
 @csrf_exempt
@@ -104,11 +113,18 @@ def AddPatient(request):
                 )
             # Save the new Patient instance
             serializer.save()
-            return Response(
-                "Patient added successfully", status=status.HTTP_201_CREATED
-            )
+
+            # Retrieve the ID and username of the newly added patient
+            new_patient = Patient.objects.get(PatientUserName=patient_username)
+            response_data = {
+                "id": new_patient.PatientId,
+                "username": new_patient.PatientUserName,
+            }
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 
 @csrf_exempt
@@ -374,6 +390,8 @@ def listPatientReservation(request):
 
     for appointment in appointments:
         slot = appointment.AppointmentSlotNumber
+        # if Slot.objects.get(SlotId = slot).Is_available:
+        #     continue
         doctor = slot.doctorSlotFK
 
         appointment_data = {

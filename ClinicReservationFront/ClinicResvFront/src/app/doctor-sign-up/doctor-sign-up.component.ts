@@ -31,10 +31,11 @@ export class DoctorSignUpComponent {
 
     // Call the doctor service to add the doctor
     this.DoctorSignUpService.addDoctor(doctor).subscribe(
-      () => {
+      (response) => {
+        const id = response.id;
         alert('Doctor added successfully');
         // Navigate to login page or any other desired page
-        this.navigateToHome();
+        this.router.navigate(['./doctorHomePage',id]);
       },
       (error) => {
         alert('Error adding doctor: ' + error);
