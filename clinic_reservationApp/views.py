@@ -239,6 +239,8 @@ def deleteSlot(request):
         return Response(status=status.HTTP_304_NOT_MODIFIED)
 
 
+# Update the 'choose_slot' view to return the updated slot information
+
 @csrf_exempt
 @api_view(["POST"])
 def choose_slot(request):
@@ -275,14 +277,9 @@ def choose_slot(request):
             # Mark the slot as unavailable
             slot.Is_available = False
             slot.save()
-            # kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
-            message = {
-                "doctorId": doctor,
-                "patientId": patient.PatientId,
-                "Operation": "ReservationCreated",
-            }
-            # kafka_producer.produce_message("clinic_reservation", str(message))
-            return Response("Slot chosen successfully", status=status.HTTP_201_CREATED)
+            # Return the updated slot information
+            serializer = SlotSerializer(slot)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(
                 appointment_serializer.errors, status=status.HTTP_400_BAD_REQUEST

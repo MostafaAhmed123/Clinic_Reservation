@@ -9,35 +9,41 @@ import { Router } from '@angular/router';
   styleUrls: ['./patient-sign-up.component.scss']
 })
 export class PatientSignUpComponent {
-    patientName: string = '';
-    patientUserName: string = '';
-    patientHashedPassword:string = '';
+  PatientName: string = '';
+  PatientUserName: string = '';
+  PatientHashedPassword:string = '';
     confirmPassword:string = '';
-    patientMedicalHistory:string = '';
+    PatientMdedicalHistory:string = '';
 
   constructor(private router: Router, private PatientSignUpService: PatientSignUpService ) {}
 
   proceedPatientSignUp() {
-    if (this.patientHashedPassword !== this.confirmPassword) {
+    if (this.PatientHashedPassword !== this.confirmPassword) {
       alert('Passwords do not match. Please try again.');
       return;
     }
     const patient = {
-      patientName: this.patientName,
-      patientUserName: this.patientUserName,
-      patientHashedPassword: this.patientHashedPassword,
-      patientMedicalHistory: this.patientMedicalHistory
+      PatientName: this.PatientName,
+      PatientUserName: this.PatientUserName,
+      PatientHashedPassword: this.PatientHashedPassword,
+      PatientMdedicalHistory: this.PatientMdedicalHistory
     };
 
-      this.PatientSignUpService.addPatient(patient).subscribe(
-        () => {
-          alert('Registered Successfully');
-          this.router.navigate(['./patientHomePage']);
-        },
-        (error) => {
-          alert('Error adding patient: ' + error);
-        }
-      );
+    console.log('Patient Data:', patient);
+
+this.PatientSignUpService.addPatient(patient).subscribe(
+    () => {
+        console.log('Registration Successful');
+        alert('Registered Successfully');
+        this.router.navigate(['./patientHomePage']);
+    },
+    (error) => {
+        console.error('Error adding patient:', error);
+        alert('Error adding patient: ' + error);
+    }
+);
+
+  
     }
     navigateToLogin() {
     this.router.navigate(['/login']);

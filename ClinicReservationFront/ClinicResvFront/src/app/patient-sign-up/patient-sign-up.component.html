@@ -13,15 +13,15 @@
         <h2 class="title">Patient Sign up</h2>
         <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" [(ngModel)]="patientName" name="PatientName" placeholder="First Name" required><br>
+            <input type="text" [(ngModel)]="PatientName" name="PatientName" placeholder="First Name" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-user"></i>
-            <input type="text" [(ngModel)]="patientUserName"  name="username" placeholder="Unique username" required><br>
+            <input type="text" [(ngModel)]="PatientUserName"  name="username" placeholder="Unique username" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-lock"></i>
-            <input type="password" [(ngModel)]="patientHashedPassword" name="Password" id="Password" placeholder="Password" required><br>
+            <input type="password" [(ngModel)]="PatientHashedPassword" name="Password" id="Password" placeholder="Password" required><br>
         </div>
         <div class="input-field">
             <i class="fas fa-lock"></i>
@@ -29,7 +29,7 @@
         </div>
         <div class="input-field">
             <i class="fas fa-notes-medical"></i>
-            <textarea name="MedicalHistory" [(ngModel)]="patientMedicalHistory" id="MedicalHistory" cols="20" rows="10" placeholder="Enter your Medical History"></textarea>
+            <textarea name="MedicalHistory" [(ngModel)]="PatientMdedicalHistory" id="MedicalHistory" cols="20" rows="10" placeholder="Enter your Medical History"></textarea>
         </div>    
         <input type="submit" value="Sign up" class="btn solid">
     </form>

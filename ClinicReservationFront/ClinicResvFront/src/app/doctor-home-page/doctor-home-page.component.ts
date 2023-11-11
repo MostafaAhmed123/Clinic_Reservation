@@ -51,7 +51,7 @@ export class DoctorHomePageComponent implements OnInit {
       return;
     }
 
-    const doctorId = 14;
+    const doctorId = 7;
     const newSlot = {
       Date: date,
       StartTime: startTime,
@@ -77,7 +77,7 @@ export class DoctorHomePageComponent implements OnInit {
 
 
   loadDoctorSlots() {
-    const doctorId = 14;
+    const doctorId = 7;
     this.doctorHomePageService.getAllSlots(doctorId).subscribe(
       (response) => {
         console.log('Slots successfully retrieved:', response);

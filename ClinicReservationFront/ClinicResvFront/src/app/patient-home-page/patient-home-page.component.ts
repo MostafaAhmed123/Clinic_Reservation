@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {Router} from '@angular/router';
-import {AppointmentService} from '../patient-home-page.service';
+import { Router } from '@angular/router';
+import { AppointmentService } from '../patient-home-page.service';
 import { OnInit } from '@angular/core';
 
 @Component({
@@ -12,10 +12,10 @@ export class PatientHomePageComponent implements OnInit {
   appointments: any[] = [];
   availableDoctors: any[] = [];
   show = false;
-
+  doctor: string = ''; // Declare the 'doctor' property
   newAppDate: string = '';
   newAppTime: string = '';
-  doctor: string = '';
+  selectedDoctor: any = null;  // To store the selected doctor object
 
   constructor(
     private router: Router,
@@ -25,9 +25,16 @@ export class PatientHomePageComponent implements OnInit {
   ngOnInit() {
     this.getAvailableDoctors();
   }
+  
+  getAppointments() {
+    // Implement the logic to fetch appointments
+    // You may need to modify your service for this
+  }
+
   getAvailableDoctors() {
     this.appointmentService.getAvailableDoctors().subscribe(
       (doctors) => {
+        console.log('Available doctors:', doctors);
         this.availableDoctors = doctors;
       },
       (error) => {
@@ -35,23 +42,31 @@ export class PatientHomePageComponent implements OnInit {
       }
     );
   }
+  
+  
+  
 
   openPop() {
     this.show = true;
   }
+
   closePop() {
     this.show = false;
   }
 
-  addAppointment(date: string, startTime: string, doctor: string) {
-    // You can implement additional validation here
+  addAppointment() {
+    if (!this.newAppDate || !this.newAppTime || !this.selectedDoctor) {
+      // Add appropriate validation messages or disable the submit button
+      return;
+    }
+
     const appointmentData = {
-      patient_username: '',
-      doctor_name:doctor ,
-      doctor_speciality: '', // You might want to get this from the available doctors list
-      date: date,
-      StartTime:startTime ,
-      EndTime: '', // You can set this based on the doctor's schedule
+      patient_username: '', // You need to set the patient username here
+      doctor_name: this.selectedDoctor.doctorSlotFK__DoctorName,
+      doctor_speciality: this.selectedDoctor.doctorSlotFK__DoctorSpecialty,
+      date: this.newAppDate,
+      StartTime: this.newAppTime,
+      EndTime: '',
     };
 
     this.appointmentService.choose_slot(appointmentData).subscribe(
@@ -59,6 +74,7 @@ export class PatientHomePageComponent implements OnInit {
         // Update the appointments list or perform any other action upon successful booking
         console.log('Appointment booked successfully');
         this.closePop();
+        this.getAppointments();  // Refresh appointments after booking
       },
       (error) => {
         console.error('Error booking appointment:', error);
@@ -71,16 +87,10 @@ export class PatientHomePageComponent implements OnInit {
   }
 
   editSlot(appointment: any) {
-    const confirmation = confirm('Are you sure you want to edit this slot?');
-    if (confirmation) {
-      // Implement edit logic here if needed
-    }
+    // Implement edit logic here if needed
   }
 
   deleteSlot(appointment: any) {
-    const confirmation = confirm('Are you sure you want to delete this slot?');
-    if (confirmation) {
-      // Implement delete logic here if needed
-    }
+    // Implement delete logic here if needed
   }
 }
