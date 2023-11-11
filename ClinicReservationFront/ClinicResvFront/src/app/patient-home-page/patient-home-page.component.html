@@ -23,7 +23,7 @@
             <p>My Appointments</p>
             <div>
                 <div class="wrapper">
-                <button class="add_new" (click)="openPop()">+ Add Appointment</button>
+                <button class="add_new" (click)="openPop()">+ Add New</button>
             </div>
             </div>
         </div>
@@ -40,6 +40,7 @@
                         <td>{{appointment.date}}</td>
                         <td>{{ appointment.startTime}} </td>
                         <td>{{ appointment.doctorName}} </td>
+                        
                         <td>
                             <button (click)="editSlot(appointment)"><i class="fas fa-pen-to-square"></i></button>
                             <button (click)="deleteSlot(appointment)"><i class="fas fa-trash"></i></button>
@@ -54,19 +55,25 @@
             <div class="close" (click)="closePop()">
                 &times;
             </div>
-            <label for="date" class="label"> Date : </label><br>
-           <input type="date" [(ngModel)]="newAppDate" name="Time" id="Time" class = "form-control" required><br><br>
-           <label for="date" class="label"> Start Time : </label><br>
-           <input type="time" [(ngModel)]="newAppTime" name="startTime" id="startTime" class = "form-control" required><br><br>
-           <label for="doctor" class="label"> Doctor : </label><br>
-           <select [(ngModel)]="selectedDoctor" name="doctor" id="doctor" class="form-control" required>
-             <option *ngFor="let slot of availableDoctors" [ngValue]="slot">
-               {{ slot.doctorSlotFK__DoctorName }} - {{ slot.doctorSlotFK__DoctorSpecialty }}
-               ({{ slot.Date }} {{ slot.StartTime }} - {{ slot.EndTime }})
-             </option>
-           </select><br><br>
-           
-           <input type="submit" value="Submit" class="submit" (click)="addAppointment()">
+           <label for="date" class="label"> Doctor : </label><br>
+           <select [(ngModel)]="doctor" name="doctor" id="doctor" class="form-control" required>
+             <option *ngFor="let doc of availableDoctors" [value]="doc.DoctorName">{{ doc.DoctorName }},{{doc.DoctorSpecialty}}</option>
+           </select><br><br>           
+           <input type="submit" value="Next" class="submit" (click)="openSecondPop()">
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="showSecondPop">
+        <div class="content">
+            <div class="close" (click)="closeSecondPop()">
+                &times;
+            </div>
+            <label for="name" class="label"> Doctor Slots : </label><br>
+            <select [(ngModel)]="selectedSlot" name="selectedSlot" id="selectedSlot" class="form-control" required>
+                <option *ngFor="let slot of doctorSlots" [value]="slot.SlotId">
+                    {{ slot.Date }} - {{ slot.StartTime }} to {{ slot.EndTime }}
+                </option>
+            </select>
+            <input type="submit" value="Submit" class="submit" (click)="addAppointment(username, selectedSlot)">
         </div>
     </div>
 </div>

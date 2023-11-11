@@ -16,6 +16,8 @@ from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+
 
 
 # Create your views here.
@@ -35,7 +37,7 @@ def login(request):
                 and doctor.DoctorHashedPassword == hashedPassword
             ):
                 return JsonResponse(
-                    {"Type": "Doctor", "ID": doctor.DoctorId}, status=status.HTTP_200_OK
+                    {"Type": "Doctor", "ID": doctor.DoctorId, "Username": doctor.DoctorUserName}, status=status.HTTP_200_OK
                 )
         patients = Patient.objects.all()
         for patient in patients:
@@ -44,7 +46,7 @@ def login(request):
                 and patient.PatientHashedPassword == hashedPassword
             ):
                 return JsonResponse(
-                    {"Type": "Patient", "ID": patient.PatientId},
+                    {"Type": "Patient", "ID": patient.PatientId, "Username": patient.PatientUserName},
                     status=status.HTTP_200_OK,
                 )
         return Response(
@@ -187,12 +189,9 @@ def list_doctor_names_specialties(request):
 @csrf_exempt
 @api_view(["GET"])
 def view_available_slots(request):
-    doctor_name = request.query_params.get("doctor_name")
-    doctor_speciality = request.query_params.get("doctor_speciality")
+    doctor_id = request.query_params.get("doctorId")  # Change parameter to doctor_id
     try:
-        doctor = Doctor.objects.get(
-            DoctorName=doctor_name, DoctorSpecialty=doctor_speciality
-        )
+        doctor = Doctor.objects.get(DoctorId=doctor_id)  # Use id to retrieve doctor
         available_slots = Slot.objects.filter(doctorSlotFK=doctor, Is_available=1)
 
         if available_slots.exists():
@@ -204,6 +203,7 @@ def view_available_slots(request):
             )
     except Doctor.DoesNotExist:
         return Response("Doctor not found", status=status.HTTP_404_NOT_FOUND)
+
 
 
 def is_done(slot):
@@ -246,24 +246,13 @@ def deleteSlot(request):
 def choose_slot(request):
     parser = JSONParser().parse(request)
     patient_username = parser.get("patient_username")
-    doctor_name = parser.get("doctor_name")
-    doctor_speciality = parser.get("doctor_speciality")
-    date = parser.get("date")
-    startTime = parser.get("StartTime")
-    endTime = parser.get("EndTime")
+    slot_id = parser.get("slot_id")  # Change to slot_id
 
     try:
+        print(patient_username)
         patient = Patient.objects.get(PatientUserName=patient_username)
-        doctor = Doctor.objects.get(
-            DoctorName=doctor_name, DoctorSpecialty=doctor_speciality
-        )
-        slot = Slot.objects.get(
-            doctorSlotFK=doctor,
-            Date=date,
-            StartTime=startTime,
-            EndTime=endTime,
-            Is_available=True,
-        )
+        # Get the slot based on the provided slot_id
+        slot = Slot.objects.get(SlotId=slot_id, Is_available=True)
 
         # Create a new appointment for the patient with the chosen slot
         appointment_data = {
@@ -286,12 +275,11 @@ def choose_slot(request):
             )
     except Patient.DoesNotExist:
         return Response("Patient not found", status=status.HTTP_404_NOT_FOUND)
-    except Doctor.DoesNotExist:
-        return Response("Doctor not found", status=status.HTTP_404_NOT_FOUND)
     except Slot.DoesNotExist:
         return Response(
             "Slot not found or not available", status=status.HTTP_400_BAD_REQUEST
         )
+
 
 
 @csrf_exempt
@@ -379,10 +367,26 @@ def editAppointment(request):
 @csrf_exempt
 @api_view(["GET"])
 def listPatientReservation(request):
-    patient_id = request.query_params.get("id")
-    appointments = Appointment.objects.filter(AppointmentPatientID=patient_id)
-    appointment_serializer = AppointmentSerializer(appointments, many=True)
-    return Response(appointment_serializer.data)
+    patient_username = request.query_params.get("patient_username")
+    patient = Patient.objects.get(PatientUserName=patient_username)
+    appointments = Appointment.objects.filter(AppointmentPatientID=patient.PatientId)
+    response_data = []
+
+    for appointment in appointments:
+        slot = appointment.AppointmentSlotNumber
+        doctor = slot.doctorSlotFK
+
+        appointment_data = {
+            "date": slot.Date,
+            "start_time": slot.StartTime,
+            "end_time": slot.EndTime,
+            "doctor_name": doctor.DoctorName,
+        }
+
+        response_data.append(appointment_data)
+
+    return Response(response_data)
+
 
 
 @csrf_exempt
@@ -397,6 +401,32 @@ def listDoctorSlots(request):
 def listDoctors():
     doc = Doctor.objects.all()
     return doc
+
+@csrf_exempt
+@api_view(['PUT'])
+def editSlot(request):
+    try:
+        parser = JSONParser().parse(request)
+        slot_id = parser.get("slotId")
+        date = parser.get("Date")
+        start_time = parser.get("StartTime")
+        end_time = parser.get("EndTime")
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+        slot = Slot.objects.get(SlotId=int(slot_id))
+        slot.StartTime = start_time
+        slot.EndTime = end_time
+        slot.Date = date_obj
+
+        if is_done(slot):
+            return Response("cannot modify slot in the past", status=status.HTTP_304_NOT_MODIFIED)
+        slot.save()
+        return Response("slot modified successfully", status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 def sha256_hash(password):

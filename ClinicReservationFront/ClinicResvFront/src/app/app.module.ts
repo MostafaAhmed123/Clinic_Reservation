@@ -10,7 +10,6 @@ import { DoctorHomePageComponent } from './doctor-home-page/doctor-home-page.com
 import { PatientHomePageComponent } from './patient-home-page/patient-home-page.component';
 import {PatientSignUpComponent} from './patient-sign-up/patient-sign-up.component'
 import {RouterModule} from '@angular/router';
-import { EditSlotComponent } from './edit-slot/edit-slot.component'
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { LoginPageComponent } from './login-page/login-page.component';
 import {DoctorSignUpComponent} from './doctor-sign-up/doctor-sign-up.component'
@@ -21,7 +20,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     AppComponent,
     DoctorHomePageComponent,
     PatientHomePageComponent,
-    EditSlotComponent,
     LoginPageComponent,
     DoctorSignUpComponent,
     PatientSignUpComponent,

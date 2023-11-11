@@ -46,7 +46,7 @@
                         <td>{{ slot.StartTime }}</td>
                         <td>{{ slot.EndTime }}</td>
                         <td>
-                            <button (click)="editSlot(slot)"><i class="fas fa-pen-to-square"></i></button>
+                            <input type="submit" value="Edit" class="submit" (click)="editSlot(Date, StartTime, EndTime, slotId)">
                             <button (click)="deleteSlot(slot)"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
@@ -59,14 +59,14 @@
             <div class="close" (click)="closePop()">
                 &times;
             </div>
-            <label for="date" class="label"> Date : </label><br>
+           <label for="date" class="label"> Date : </label><br>
            <input type="date" [(ngModel)]="Date" name="Time" id="Time" class="form-control" required><br><br>
            <label for="date" class="label"> Start Time : </label><br>
            <input type="time" [(ngModel)]="StartTime" name="startTime" id="startTime" class="form-control" required><br><br>
            <label for="date" class="label"> End Time : </label><br>
            <input type="time" [(ngModel)]="EndTime" name="endTime" id="endTime" class="form-control" required><br><br>
            <input type="submit" value="Submit" class="submit" (click)="addSlot(Date, StartTime, EndTime, true)">
-        </div>
+            </div>
     </div>
 </div>
 </body>

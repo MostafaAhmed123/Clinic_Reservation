@@ -16,11 +16,20 @@ export class AppointmentService {
   }
 
   getAvailableDoctors(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/listDoctors`); // Update the URL if needed
+    return this.http.get<any[]>(`${this.apiUrl}/listDoctors`);
   }
 
-  choose_slot(appointmentData: any): Observable<any> {
+  choose_slot(patient_username: string, slot_id: number): Observable<any> {
+    const appointmentData = {
+      patient_username: patient_username,
+      slot_id: slot_id,
+    };
+
     return this.http.post(`${this.apiUrl}/chooseSlot`, appointmentData);
   }
 
+  viewDoctorSlots(doctorId: number): Observable<any[]> {
+    const url = `${this.apiUrl}/viewDoctorSlots`;
+    return this.http.get<any[]>(`${url}?doctorId=${doctorId}`);
+  }
 }

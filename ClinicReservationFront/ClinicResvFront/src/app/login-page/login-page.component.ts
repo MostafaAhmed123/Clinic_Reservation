@@ -12,20 +12,24 @@ import { FormsModule } from '@angular/forms';
 export class LoginPageComponent {
   username: string = '';
   password: string = '';
-loginForm: any;
+  loginForm: any;
 
-  constructor(private router: Router, private userLoginService: UserLoginService,  private toastr: ToastrService
+  constructor(private router: Router, private userLoginService: UserLoginService,  private toastr: ToastrService, 
     ) {}
     login(event: Event) {
       event.preventDefault(); // Prevent the default form submission behavior
       this.userLoginService.login(this.username, this.password).subscribe(
         (response) => {
+          const id= response.ID;
+          const username = response.Username;
           console.log(response);
           // Handle the response here, e.g., set user login status or show a message.
           if (response.Type == "Doctor") {
             this.toastr.success('Login successful!', 'Success');
-            // You can also navigate the user to another page here if needed
-            this.router.navigate(['/doctorHomePage']);
+            this.router.navigate(['/doctorHomePage',id]);
+          } else if (response.Type == "Patient") {
+            this.toastr.success('Login successful!', 'Success');
+            this.router.navigate(['/patientHomePage', username]);
           } else {
             this.toastr.error('Login failed. Please check your credentials!', 'Error');
           }

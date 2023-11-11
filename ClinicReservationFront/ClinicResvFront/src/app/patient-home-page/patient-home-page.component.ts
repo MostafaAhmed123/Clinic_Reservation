@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentService } from '../patient-home-page.service';
 import { OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-patient-home-page',
@@ -12,29 +13,27 @@ export class PatientHomePageComponent implements OnInit {
   appointments: any[] = [];
   availableDoctors: any[] = [];
   show = false;
-  doctor: string = ''; // Declare the 'doctor' property
-  newAppDate: string = '';
-  newAppTime: string = '';
-  selectedDoctor: any = null;  // To store the selected doctor object
-
+  showSecondPop = false;
+  doctor: string = '';
+  doctorSlots: any[] = []; // Declare and initialize doctorSlots here
+  selectedSlot: any;
+  username: string = '';
   constructor(
     private router: Router,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
     this.getAvailableDoctors();
-  }
-  
-  getAppointments() {
-    // Implement the logic to fetch appointments
-    // You may need to modify your service for this
+    this.route.params.subscribe(params=>
+      {this.username= params['username'];}
+      );
   }
 
   getAvailableDoctors() {
     this.appointmentService.getAvailableDoctors().subscribe(
       (doctors) => {
-        console.log('Available doctors:', doctors);
         this.availableDoctors = doctors;
       },
       (error) => {
@@ -42,9 +41,6 @@ export class PatientHomePageComponent implements OnInit {
       }
     );
   }
-  
-  
-  
 
   openPop() {
     this.show = true;
@@ -54,43 +50,57 @@ export class PatientHomePageComponent implements OnInit {
     this.show = false;
   }
 
-  addAppointment() {
-    if (!this.newAppDate || !this.newAppTime || !this.selectedDoctor) {
-      // Add appropriate validation messages or disable the submit button
-      return;
+  openSecondPop() {
+    this.showSecondPop = true;
+    // Call the viewDoctorSlots method when the second popup is opened
+    const selectedDoctor = this.availableDoctors.find(doc => doc.DoctorName === this.doctor);
+    if (selectedDoctor) {
+        this.appointmentService.viewDoctorSlots(selectedDoctor.DoctorId).subscribe(
+            (doctorSlots: any[]) => {
+                this.doctorSlots = doctorSlots; // Update doctorSlots with the fetched data
+                console.log('Doctor Slots:', this.doctorSlots); // Log doctorSlots for debugging
+            },
+            (error: any) => {
+                console.error('Error fetching doctor slots:', error);
+            }
+        );
     }
+  }
+  
 
-    const appointmentData = {
-      patient_username: '', // You need to set the patient username here
-      doctor_name: this.selectedDoctor.doctorSlotFK__DoctorName,
-      doctor_speciality: this.selectedDoctor.doctorSlotFK__DoctorSpecialty,
-      date: this.newAppDate,
-      StartTime: this.newAppTime,
-      EndTime: '',
-    };
-
-    this.appointmentService.choose_slot(appointmentData).subscribe(
+  closeSecondPop() {
+    this.showSecondPop = false;
+  }
+  addAppointment(username: string, slot_id: number) {
+    // You can implement additional validation here
+    console.log(username + slot_id) ;
+    this.appointmentService.choose_slot(username, slot_id).subscribe(
       () => {
+        this.username = username;
         // Update the appointments list or perform any other action upon successful booking
         console.log('Appointment booked successfully');
         this.closePop();
-        this.getAppointments();  // Refresh appointments after booking
+        this.closeSecondPop(); // Close the second popup after successful booking
       },
       (error) => {
         console.error('Error booking appointment:', error);
       }
     );
   }
-
+  editSlot(appointment: any) {
+    const confirmation = confirm('Are you sure you want to edit this slot?');
+    if (confirmation) {
+      // Implement edit logic here if needed
+    }
+  }
   navigateToLogin() {
     this.router.navigate(['/login']);
   }
-
-  editSlot(appointment: any) {
-    // Implement edit logic here if needed
-  }
-
   deleteSlot(appointment: any) {
-    // Implement delete logic here if needed
+    const confirmation = confirm('Are you sure you want to delete this slot?');
+    if (confirmation) {
+      // Implement delete logic here if needed
+    }
   }
 }
+

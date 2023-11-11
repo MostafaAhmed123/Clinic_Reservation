@@ -17,17 +17,21 @@ export class DoctorHomePageComponent implements OnInit {
   Is_available: boolean = true;
   slots: any[] = [];
   show = false;
-
+  slotId: number = 0;
+  id:any;
   constructor(
     private router: Router,
     private doctorHomePageService: DoctorHomePageService,
     private toastr: ToastrService,
     private route: ActivatedRoute
-
   ) {}
 
   ngOnInit() {
+    this.route.params.subscribe(params=>
+      {this.id= params['id'];}
+      );
       this.loadDoctorSlots();
+      
   }
   
   
@@ -51,7 +55,7 @@ export class DoctorHomePageComponent implements OnInit {
       return;
     }
 
-    const doctorId = 7;
+    const doctorId = this.id;
     const newSlot = {
       Date: date,
       StartTime: startTime,
@@ -75,10 +79,42 @@ export class DoctorHomePageComponent implements OnInit {
     );
   }
 
+  editSlot(Date: string, StartTime: string, EndTime: string, slotId: number) {
+    if (this.isPastDateTime(Date, StartTime)) {
+      this.toastr.error('Cannot edit a slot with a past date and time.', 'Error');
+      return;
+    }
+
+    if (this.isPastDateTime(Date, EndTime)) {
+      this.toastr.error('Cannot edit a slot with a past date and time.', 'Error');
+      return;
+    }
+
+    const updatedSlot = {
+      slotId: slotId,
+      Date: Date,
+      StartTime: StartTime,
+      EndTime: EndTime,
+    };
+    
+    this.doctorHomePageService.editSlot(updatedSlot).subscribe(
+      (response) => {
+        console.log('Slot edited successfully!', response);
+        this.toastr.success('Slot edited successfully!', 'Success');
+        this.loadDoctorSlots();
+        this.closePop();
+      },
+      (error) => {
+        console.error('Error editing slot:', error);
+        this.toastr.error('Failed to edit slot. Please try again later.', 'Error');
+      }
+    );
+  }
 
   loadDoctorSlots() {
-    const doctorId = 7;
-    this.doctorHomePageService.getAllSlots(doctorId).subscribe(
+    const doctorId = this.id;
+    console.log(doctorId);
+    this.doctorHomePageService.getAllSlots(this.id).subscribe(
       (response) => {
         console.log('Slots successfully retrieved:', response);
         this.slots = response;
@@ -129,12 +165,7 @@ export class DoctorHomePageComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  editSlot(slot: any) {
-    const confirmation = confirm('Are you sure you want to edit this slot?');
-    if (confirmation) {
-      // Implement edit logic here if needed
-    }
-  }
+
 
   deleteSlot(slot: any) {
     const confirmation = confirm('Are you sure you want to delete this slot?');

@@ -80,4 +80,4 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class DoctorNameSpecialtySerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ('DoctorName', 'DoctorSpecialty')
+        fields = ('DoctorName', 'DoctorSpecialty', 'DoctorId')
