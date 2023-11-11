@@ -4,8 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .serializers import *
 import hashlib
-from .kafka_producer import KafkaProducer
-from .kafka_consumer import KafkaConsumer
+# from .kafka_producer import KafkaProducer
+# from .kafka_consumer import KafkaConsumer
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework.decorators import api_view, renderer_classes
@@ -382,6 +382,15 @@ def listPatientReservation(request):
     appointments = Appointment.objects.filter(AppointmentPatientID=patient_id)
     appointment_serializer = AppointmentSerializer(appointments, many=True)
     return Response(appointment_serializer.data)
+
+
+@csrf_exempt
+@api_view(["GET"])
+def listDoctorSlots(request):
+    doctor_id = request.query_params.get("id")
+    slots = Slot.objects.filter(doctorSlotFK=doctor_id)
+    slot_serializer = SlotSerializer(slots, many=True)
+    return Response(slot_serializer.data)
 
 
 def listDoctors():

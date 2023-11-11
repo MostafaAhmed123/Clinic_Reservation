@@ -1,3 +1,5 @@
+<!-- doctor-home-page.component.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,12 +14,12 @@
                 <a href="#">MediGenius</a>
             <ul class="links">
                 <li>
-                    <button class="btn transparent" id = "sign-out-btn" (click)="navigateToLogin()">Log out</button>
+                    <button class="btn transparent" id="sign-out-btn" (click)="navigateToLogin()">Log out</button>
                 </li>
             </ul>
         </div>
     </nav>
-    <div class="table-container">
+    <div class="table-container">   
     <div class="table">
         <div class="table_header">
             <p>My Slots</p>
@@ -39,10 +41,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let slot of slots" >
-                        <td>{{slot.date}}</td>
-                        <td>{{ slot.startTime}} </td>
-                        <td>{{ slot.endTime}} </td>
+                    <tr *ngFor="let slot of slots">
+                        <td>{{ slot.Date }}</td>
+                        <td>{{ slot.StartTime }}</td>
+                        <td>{{ slot.EndTime }}</td>
                         <td>
                             <button (click)="editSlot(slot)"><i class="fas fa-pen-to-square"></i></button>
                             <button (click)="deleteSlot(slot)"><i class="fas fa-trash"></i></button>
@@ -58,12 +60,12 @@
                 &times;
             </div>
             <label for="date" class="label"> Date : </label><br>
-           <input type="date" [(ngModel)]="newSlotDate" name="Time" id="Time" class = "form-control" required><br><br>
+           <input type="date" [(ngModel)]="Date" name="Time" id="Time" class="form-control" required><br><br>
            <label for="date" class="label"> Start Time : </label><br>
-           <input type="time" [(ngModel)]="newSlotStartTime" name="startTime" id="startTime" class = "form-control" required><br><br>
+           <input type="time" [(ngModel)]="StartTime" name="startTime" id="startTime" class="form-control" required><br><br>
            <label for="date" class="label"> End Time : </label><br>
-           <input type="time" [(ngModel)]="newSlotEndTime" name="endTime" id="endTime" class = "form-control" required><br><br>
-           <input type="submit" value="Submit" class="submit" (click)="addSlot(newSlotDate,newSlotStartTime,newSlotEndTime)">
+           <input type="time" [(ngModel)]="EndTime" name="endTime" id="endTime" class="form-control" required><br><br>
+           <input type="submit" value="Submit" class="submit" (click)="addSlot(Date, StartTime, EndTime, true)">
         </div>
     </div>
 </div>

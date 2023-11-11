@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "clinic_reservationApp.apps.ClinicReservationConfig",
     "debug_toolbar",
-    "background_task",
+    #"background_task",
 ]
 
-BACKGROUND_TASK_RUN_ASYNC = True
+#BACKGROUND_TASK_RUN_ASYNC = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -89,7 +89,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "clinic",
         "USER": "root",
-        "PASSWORD": "Hana.2002",
+        "PASSWORD": "h_Kd16*23132",
         "HOST": "127.0.0.1",
         "PORT": "3306",
     }
