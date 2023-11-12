@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+    <div class="forms-container">
+     <div class="signin-signup">
+    <form (ngSubmit)="submitForm()" autocomplete="on" class="sign-up-form">
+        <h2 class="title">Doctor Sign up</h2>
+        <div class="input-field">
+            <i class="fas fa-user"></i>
+            <input type="text" [(ngModel)]="doctorName" name="name" placeholder="Enter your First Name" required><br>
+        </div>
+        <div class="input-field">
+            <i class="fas fa-user"></i>
+            <input type="text" [(ngModel)]="doctorUsername"  name="username" placeholder="Enter a Unique username" required><br>
+        </div>
+        <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input type="password" [(ngModel)]="doctorPassword" name="Password" id="Password" placeholder="Enter your Password" required><br>
+        </div>
+        <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="confirmPass" [(ngModel)]="confirmPassword" name="confirmPass" placeholder="Confirm your Password" required><br>
+        </div>
+        <div class="input-field">
+                <i class="fas fa-user-md"></i>
+            <div class="select-container">
+            <select id="specialty" [(ngModel)]="doctorSpecialty" name="specialty">
+                <option value="cardiologist">Cardiologist</option>
+                <option value="dermatologist">Dermatologist</option>
+                <option value="dentist">Dentist</option>
+                <option value="gynecologist">Gynecologist</option>
+                <option value="pediatrician">Pediatrician</option>
+                <option value="orthopedic"> Orthopedic</option>
+                <option value="oncologist">Oncologist</option>
+                <option value="neurologist">Neurologist</option>
+                <option value="ophthalmologist">Ophthalmologist</option>
+                <option value="urologist">Urologist</option>
+                <option value="endocrinologist">Endocrinologist</option>
+                <option value="gastroenterologist">Gastroenterologist</option>
+                <option value="pulmonologist">Pulmonologist</option>
+                <option value="psychiatrist">Psychiatrist</option>
+                <option value="urologist">Urologist</option>
+                <option value="dermatopathologist">Dermatopathologist</option>
+                <option value="nephrologist">Nephrologist</option>
+                <option value="radiologist">Radiologist</option>
+                <option value="anesthesiologist">Anesthesiologist</option>
+                <option value="pathologist">Pathologist</option>
+                <option value="rheumatologist">Rheumatologist</option>
+                <option value="gastrointestinal-surgeon">Gastrointestinal Surgeon</option>
+                <option value="vascular-surgeon">Vascular Surgeon</option>
+            </select>
+        </div>
+        </div>    
+        <input type="submit" value="Sign up" class="btn solid">
+    </form>
+ </div>
+</div>
+    <div class="panels-container">
+        <div class="panel right-panel">
+            <div class="content">
+                <h3>One of us ?</h3>
+                <p>Login to explore our website !</p>
+                <button class="btn transparent" id = "sign-in-btn" (click)="navigateToLogin()">Sign in</button>
+            </div>
+            <img src="../assets/Images/undraw_medical_care_movn.svg" alt="" class="image">
+        </div>
+    </div>
+</div>
+</body>
+</html>
