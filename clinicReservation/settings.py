@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "clinic_reservationApp.apps.ClinicReservationConfig",
     "debug_toolbar",
-    #"background_task",
+    # "background_task",
 ]
 
-#BACKGROUND_TASK_RUN_ASYNC = True
+# BACKGROUND_TASK_RUN_ASYNC = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -90,7 +90,7 @@ DATABASES = {
         "NAME": "clinic",
         "USER": "root",
         "PASSWORD": "Hana.2002",
-        "HOST": "127.0.0.1",
+        "HOST": "mysqldb",
         "PORT": "3306",
     }
 }
@@ -133,8 +133,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 KAFKA_CONFIG = {
-    "bootstrap_servers": "kafka-broker1:9092,kafka-broker2:9092,kafka-broker3:9092",
-    "group_id": "your_consumer_group_id",
+    "bootstrap_servers": "localhost:9092",
+    "group_id": "clinic",
     "auto_offset_reset": "earliest",
 }
 # Internationalization

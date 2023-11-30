@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .serializers import *
 import hashlib
-# from .kafka_producer import KafkaProducer
-# from .kafka_consumer import KafkaConsumer
+from .kafka_producer import KafkaProducer
+from .kafka_consumer import KafkaConsumer
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework.decorators import api_view, renderer_classes
@@ -17,7 +17,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-
+from django.conf import settings
 
 
 # Create your views here.
@@ -37,7 +37,12 @@ def login(request):
                 and doctor.DoctorHashedPassword == hashedPassword
             ):
                 return JsonResponse(
-                    {"Type": "Doctor", "ID": doctor.DoctorId, "Username": doctor.DoctorUserName}, status=status.HTTP_200_OK
+                    {
+                        "Type": "Doctor",
+                        "ID": doctor.DoctorId,
+                        "Username": doctor.DoctorUserName,
+                    },
+                    status=status.HTTP_200_OK,
                 )
         patients = Patient.objects.all()
         for patient in patients:
@@ -46,7 +51,11 @@ def login(request):
                 and patient.PatientHashedPassword == hashedPassword
             ):
                 return JsonResponse(
-                    {"Type": "Patient", "ID": patient.PatientId, "Username": patient.PatientUserName},
+                    {
+                        "Type": "Patient",
+                        "ID": patient.PatientId,
+                        "Username": patient.PatientUserName,
+                    },
                     status=status.HTTP_200_OK,
                 )
         return Response(
@@ -90,7 +99,6 @@ def AddDoctor(request):
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-
 @csrf_exempt
 @api_view(("POST",))
 def AddPatient(request):
@@ -124,7 +132,6 @@ def AddPatient(request):
             return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response("Invalid HTTP method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 
 
 @csrf_exempt
@@ -221,7 +228,6 @@ def view_available_slots(request):
         return Response("Doctor not found", status=status.HTTP_404_NOT_FOUND)
 
 
-
 def is_done(slot):
     if slot.Date > date.today():
         return False
@@ -257,6 +263,7 @@ def deleteSlot(request):
 
 # Update the 'choose_slot' view to return the updated slot information
 
+
 @csrf_exempt
 @api_view(["POST"])
 def choose_slot(request):
@@ -284,6 +291,13 @@ def choose_slot(request):
             slot.save()
             # Return the updated slot information
             serializer = SlotSerializer(slot)
+            kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
+            message = {
+                "doctorId": slot.doctorSlotFK,
+                "patientId": patient,
+                "Operation": "ReservationCreated",
+            }
+            kafka_producer.produce_message("clinicreservation", str(message))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(
@@ -295,7 +309,6 @@ def choose_slot(request):
         return Response(
             "Slot not found or not available", status=status.HTTP_400_BAD_REQUEST
         )
-
 
 
 @csrf_exempt
@@ -322,13 +335,13 @@ def cancel_appointment(request):
         slot.save()
         # Delete the appointment
         appointment.delete()
-        #kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
+        kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
         message = {
             "doctorId": slot.doctorSlotFK,
             "patientId": patient,
             "Operation": "ReservationCancelled",
         }
-       # kafka_producer.produce_message("clinic_reservation", str(message))
+        kafka_producer.produce_message("clinicreservation", str(message))
         return Response("Appointment canceled successfully")
     except Appointment.DoesNotExist:
         return Response("Appointment Not Found", status=status.HTTP_400_BAD_REQUEST)
@@ -340,17 +353,21 @@ def cancel_appointment(request):
 @api_view(["GET"])
 def getDoctorNotifications(request):
     id = request.query_params.get("id")
-    # kafka_consumer = KafkaConsumer(
-    #     settings.KAFKA_CONFIG["bootstrap_servers"],
-    #     settings.KAFKA_CONFIG["group_id"],
-    #     settings.KAFKA_CONFIG["auto_offset_reset"],
-    # )
-    # messages = kafka_consumer.consume_messages("clinic_reservation")
+    kafka_consumer = KafkaConsumer(
+        settings.KAFKA_CONFIG["bootstrap_servers"],
+        settings.KAFKA_CONFIG["group_id"],
+        settings.KAFKA_CONFIG["auto_offset_reset"],
+    )
+    messages = kafka_consumer.consume_messages("clinicreservation")
+    print(messages)
     res = []
     for message in messages:
-        data = json.loads(message.value())
+        data = json.loads(message)
         if int(data["doctorId"]) == int(id):
-            res.append(message)
+            res.append(
+                str(data)
+            )  # Append the decoded message, not the Kafka message object
+
     context = {"messages": res}
     return JsonResponse(context)
 
@@ -370,13 +387,13 @@ def editAppointment(request):
     slot2.Is_available = False
     slot2.save()
     appointment.save()
-    # kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
+    kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
     message = {
         "doctorId": slot.doctorSlotFK,
         "patientId": appointment.AppointmentPatientID,
         "Operation": "ReservationUpdated",
     }
-    # kafka_producer.produce_message("clinic_reservation", str(message))
+    kafka_producer.produce_message("clinicreservation", str(message))
     return Response("Appointment edited successfully")
 
 
@@ -406,7 +423,6 @@ def listPatientReservation(request):
     return Response(response_data)
 
 
-
 @csrf_exempt
 @api_view(["GET"])
 def listDoctorSlots(request):
@@ -420,8 +436,9 @@ def listDoctors():
     doc = Doctor.objects.all()
     return doc
 
+
 @csrf_exempt
-@api_view(['PUT'])
+@api_view(["PUT"])
 def editSlot(request):
     try:
         parser = JSONParser().parse(request)
@@ -436,15 +453,15 @@ def editSlot(request):
         slot.Date = date_obj
 
         if is_done(slot):
-            return Response("cannot modify slot in the past", status=status.HTTP_304_NOT_MODIFIED)
+            return Response(
+                "cannot modify slot in the past", status=status.HTTP_304_NOT_MODIFIED
+            )
         slot.save()
         return Response("slot modified successfully", status=status.HTTP_200_OK)
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return Response("Bad Request", status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 def sha256_hash(password):
