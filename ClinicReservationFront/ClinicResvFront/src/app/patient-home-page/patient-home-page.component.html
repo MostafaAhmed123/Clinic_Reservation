@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>HomePatient</title>
+</head>
+<body>
+   <nav>
+        <div class="navbar">
+                <a href="#">MediGenius</a>
+            <ul class="links">
+                <li>
+                    <button class="btn transparent" id = "sign-out-btn" (click)="navigateToLogin()">Log out</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="table-container">
+    <div class="table">
+        <div class="table_header">
+            <p>My Appointments</p>
+            <div>
+                <div class="wrapper">
+                <button class="add_new" (click)="openPop()">+ Add New</button>
+            </div>
+            </div>
+        </div>
+        <div class="table_section">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">Appointment</th>
+                        <th colspan="2">Doctor</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+
+<tbody>
+    <tr *ngFor="let appointment of appointments" >
+      <td>{{appointment.date}}</td>
+      <td>{{ appointment.start_time}} </td>
+      <td colspan="2">{{ appointment.doctor_name}} </td>
+      
+      <td>
+        <button (click)="editSlot(appointment)"><i class="fas fa-pen-to-square"></i></button>
+        <button (click)="deleteSlot(appointment)"><i class="fas fa-trash"></i></button>
+    </td>
+    </tr>
+  </tbody>
+  
+            </table>
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="show">
+        <div class="content" >
+            <div class="close" (click)="closePop()">
+                &times;
+            </div>
+           <label for="date" class="label"> Doctor : </label><br>
+           <select [(ngModel)]="doctor" name="doctor" id="doctor" class="form-control" required>
+             <option *ngFor="let doc of availableDoctors" [value]="doc.DoctorName">{{ doc.DoctorName }},{{doc.DoctorSpecialty}}</option>
+           </select><br><br>           
+           <input type="submit" value="Next" class="submit" (click)="openSecondPop()">
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="showSecondPop">
+        <div class="content">
+            <div class="close" (click)="closeSecondPop()">
+                &times;
+            </div>
+            <label for="name" class="label"> Doctor Slots : </label><br>
+            <select [(ngModel)]="selectedSlot" name="selectedSlot" id="selectedSlot" class="form-control" required>
+                <option *ngFor="let slot of doctorSlots" [value]="slot.SlotId">
+                    {{ slot.Date }} - {{ slot.StartTime }} to {{ slot.EndTime }}
+                </option>
+            </select>
+            <input type="submit" value="Submit" class="submit" (click)="addAppointment(username, selectedSlot)">
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="showEdit">
+        <div class="content" >
+            <div class="close" (click)="closeEdit()">
+                &times;
+            </div>
+           <label for="date" class="label"> Doctor : </label><br>
+           <select [(ngModel)]="doctor" name="doctor" id="doctor" class="form-control" required>
+             <option *ngFor="let doc of availableDoctors" [value]="doc.DoctorName">{{ doc.DoctorName }},{{doc.DoctorSpecialty}}</option>
+           </select><br><br>           
+           <input type="submit" value="Next" class="submit" (click)="openSecondEdit()">
+        </div>
+    </div>
+    <div class="over-lay" *ngIf="showSecondEdit">
+        <div class="content">
+            <div class="close" (click)="closeSecondPopEdit()">
+                &times;
+            </div>
+            <label for="name" class="label"> Doctor Slots : </label><br>
+            <select [(ngModel)]="selectedSlot" name="selectedSlot" id="selectedSlot" class="form-control" required>
+                <option *ngFor="let slot of doctorSlots" [value]="slot.SlotId">
+                    {{ slot.Date }} - {{ slot.StartTime }} to {{ slot.EndTime }}
+                </option>
+            </select>
+            <input type="submit" value="Submit" class="submit" (click)="editAppointment()">
+        </div>
+    </div>
+</div>
+</body>
+</html>
