@@ -20,7 +20,7 @@ body{
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    height: 100vh; /* Make the container full viewport height */
+    height: 80vh; /* Make the container full viewport height */
     width: 1000px;
     margin-left: 270px;
     margin-top: 100px;
@@ -145,7 +145,7 @@ thead th{
 .content{
     background-color: #fff;
     width: 422px;
-    height: 510px;
+    height: 620px;
     padding: 20px;
 }
 th,td{
@@ -170,8 +170,7 @@ th,td{
     font-size: 0.8rem;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 42px;
-    margin-left: 60px;
+    margin-left: 128px;
 }
 .label{
     font-family: 'Poppins', sans-serif;

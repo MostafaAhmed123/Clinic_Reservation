@@ -12,10 +12,9 @@ input {
 }
 
 .container {
-  position: relative;
   width: 100%;
   background-color: #fff;
-  min-height: 100vh;
+  min-height: 50vh;
   overflow: hidden;
 }
 
@@ -33,7 +32,6 @@ input {
   transform: translate(-50%, -50%);
   left: 0%;
   width: 11%;
-//   transition: 1s 0.7s ease-in-out;
   display: grid;
   grid-template-columns: 1fr;
   z-index: 5;
@@ -45,14 +43,9 @@ form {
   justify-content: center;
   flex-direction: column;
   padding: 0rem 20rem;
-//   transition: all 0.2s 0.7s;
-//   overflow: hidden;
-//   grid-column: 1 / 2;
-//   grid-row: 1 / 2;
 }
 
 form.sign-up-form {
-//   opacity: 0;
   z-index: 1;
 }
 
@@ -121,15 +114,7 @@ form.sign-in-form {
 .btn:hover {
   background-color: #4d84e2;
 }
-// .panels-container {
-//   position: absolute;
-//   height: 100%;
-//   width: 100%;
-//   top: 0;
-//   left: 0;
-//   display: grid;
-//   grid-template-columns: repeat(2, 1fr);
-// }
+
 
 .container:before {
   content: "";
@@ -151,47 +136,6 @@ form.sign-in-form {
   transition-delay: 0.4s;
 }
 
-// .panel {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-end;
-//   justify-content: space-around;
-//   text-align: center;
-//   z-index: 6;
-// }
-
-// // .left-panel {
-// //   pointer-events: all;
-// //   padding: 3rem 17% 2rem 12%;
-// // }
-
-// .right-panel {
-//   pointer-events: none;
-//   padding: 3rem 12% 2rem 17%;
-// }
-
-// .panel .content {
-//   color: #fff;
-//   transition: transform 0.9s ease-in-out;
-//   transition-delay: 0.6s;
-// }
-// .right-panel {
-//     z-index: 2;
-//     position: absolute;
-//     right: 0; /* Adjust as needed */
-//     width: 50%; /* Adjust the width as needed */
-//   }
-// .panel h3 {
-//   font-weight: 600;
-//   line-height: 1;
-//   font-size: 1.5rem;
-// }
-
-// .panel p {
-//   font-size: 0.95rem;
-//   padding: 0.7rem 0;
-// }
-
 .btn.transparent {
   margin: 0;
   background: none;
@@ -204,16 +148,17 @@ form.sign-in-form {
 
 
 
-// .input-field {
-//     max-width: 380px;
-//     width: 100%;
-//     background-color: #f0f0f0;
-//     margin: 10px 0;
-//     border-radius: 55px;
-//     display: flex;
-//     flex-direction: column;
-//     padding: 0.4rem;
-// }
+/*.input-field {
+    max-width: 380px;
+    width: 100%;
+    background-color: #f0f0f0;
+    margin: 10px 0;
+    border-radius: 55px;
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem;
+}
+*/
 
 .input-field textarea {
     resize: none; /* Prevents textarea resizing by the user */
@@ -237,28 +182,28 @@ form.sign-in-form {
     padding-right: 30px;
 }
 
-// .btn {
-//     width: 150px;
-//     height: 49px;
-//     border: none;
-//     outline: none;
-//     border-radius: 49px;
-//     cursor: pointer;
-//     transition: 0.5s;
-//     background-color: #5995fd;
-//     color: #fff;
-//     text-transform: uppercase;
-//     font-weight: 600;
-//     margin: 10px 0;
-// }
+/*.btn {
+    width: 150px;
+    height: 49px;
+    border: none;
+    outline: none;
+    border-radius: 49px;
+    cursor: pointer;
+    transition: 0.5s;
+    background-color: #5995fd;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 10px 0;
+}
 
-// .btn:hover {
-//     background-color: #4d84e2;
-// }
-// .image{
-//     width: 100%;
-//     max-width: 700px;
-// }
+.btn:hover {
+    background-color: #4d84e2;
+}
+.image{
+    width: 100%;
+    max-width: 700px;
+}*/
 .panels-container{
     position: absolute;
     width: 100%;

@@ -24,6 +24,7 @@ export class AppointmentService {
       patient_username: patient_username,
       slot_id: slot_id,
     };
+    console.log('Request Payload:', appointmentData); // Log the payload
 
     return this.http.post(`${this.apiUrl}/chooseSlot`, appointmentData);
   }
@@ -36,12 +37,15 @@ export class AppointmentService {
     const url = `${this.apiUrl}/listReservations`;
     return this.http.get<any[]>(`${url}?patient_username=${patient_username}`);
   }
-  editAppointment(appointmentData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/editAppointment`, appointmentData);
+  editAppointment(appointment_id: number, new_slot_id :number): Observable<any> {
+    const body ={
+      appointment_id: appointment_id,
+      slot_id: new_slot_id
+    };
+    console.log(body)
+    return this.http.put(`${this.apiUrl}/editAppointment`, body);
   }
-  // deleteAppointment(appointmentData: any): Observable<any>{
-  //   return this.http.delete(`${this.apiUrl}`)
-  // }
+
   cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
     const cancelData = {
       patientUsername: patientUsername,
@@ -51,3 +55,4 @@ export class AppointmentService {
     return this.http.delete(`${this.apiUrl}/cancelAppointment`, { body: cancelData });
   }
 }
+

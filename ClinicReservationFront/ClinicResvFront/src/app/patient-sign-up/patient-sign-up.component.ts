@@ -48,6 +48,6 @@ this.PatientSignUpService.addPatient(patient).subscribe(
   
     }
     navigateToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
   }
 }

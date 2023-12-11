@@ -79,24 +79,24 @@ export class DoctorHomePageComponent implements OnInit {
     );
   }
 
-  editSlot(Date: string, StartTime: string, EndTime: string, slotId: number) {
-    if (this.isPastDateTime(Date, StartTime)) {
+  editSlot(slot:any) {
+    if (this.isPastDateTime(slot.date, slot.startTime)) {
       this.toastr.error('Cannot edit a slot with a past date and time.', 'Error');
       return;
     }
 
-    if (this.isPastDateTime(Date, EndTime)) {
+    if (this.isPastDateTime(slot.date, slot.endTime)) {
       this.toastr.error('Cannot edit a slot with a past date and time.', 'Error');
       return;
     }
 
     const updatedSlot = {
-      slotId: slotId,
-      Date: Date,
-      StartTime: StartTime,
-      EndTime: EndTime,
+      slotId: slot.slot_id,
+      Date: this.Date,
+      StartTime: this.StartTime ,
+      EndTime: this.EndTime,
     };
-    
+    console.log(slot)
     this.doctorHomePageService.editSlot(updatedSlot).subscribe(
       (response) => {
         console.log('Slot edited successfully!', response);
@@ -162,7 +162,7 @@ export class DoctorHomePageComponent implements OnInit {
   }
 
   navigateToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
   }
 
 

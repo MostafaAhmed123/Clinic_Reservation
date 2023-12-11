@@ -21,10 +21,6 @@ urlpatterns = [
         r"^patient/chooseSlot$",
         views.choose_slot,
     ),
-    re_path(
-        r"^patient/cancelAppointment$",
-        views.cancel_appointment,
-    ),
     re_path(r"^patient/editAppointment$", views.editAppointment),
     re_path(r"^user/login$", views.login),
     re_path(r"^patient/listReservations$", views.listPatientReservation),
@@ -33,4 +29,5 @@ urlpatterns = [
     re_path(r"^user/getCurrentUser$", views.getUser),
     re_path(r"^doctor/getNotifications$", views.getDoctorNotifications),
     re_path(r"^doctor/editSlot$", views.editSlot),
+    re_path(r"^patient/cancelAppointment", views.cancel_appointment)
 ]

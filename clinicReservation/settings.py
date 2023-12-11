@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "clinic_reservationApp.apps.ClinicReservationConfig",
     "debug_toolbar",
-    #"background_task",
+    # "background_task",
 ]
 
-#BACKGROUND_TASK_RUN_ASYNC = True
+# BACKGROUND_TASK_RUN_ASYNC = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -82,16 +82,22 @@ WSGI_APPLICATION = "clinicReservation.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 import pymysql
+import os
 
 pymysql.install_as_MySQLdb()
+
+databaseName = os.environ["DATABASE_NAME"]
+databasePort = os.environ["DATABASE_PORT"]
+databasePassword = os.environ["DATABASE_PASSWORD"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "clinic",
+        "NAME": str(databaseName),
         "USER": "root",
-        "PASSWORD": "Hana.2002",
-        "HOST": "127.0.0.1",
-        "PORT": "3306",
+        "PASSWORD": str(databasePassword),
+        "HOST": "database",
+        "PORT": str(databasePort),
     }
 }
 DEBUG_TOOLBAR_PANELS = [
@@ -152,6 +158,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
+    "http://localhost:53972",
+    "http://localhost:58974",
     # Add other allowed origins here if needed
 ]
 

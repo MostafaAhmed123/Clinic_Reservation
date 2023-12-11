@@ -8,8 +8,8 @@ import {DoctorHomePageComponent} from './doctor-home-page/doctor-home-page.compo
 import {PatientHomePageComponent} from './patient-home-page/patient-home-page.component'
 const routes: Routes = [
   {path:'patientSignUp', component:PatientSignUpComponent},
-  {path:'', component:HomeComponent},
-  {path:'login', component:LoginPageComponent},
+  // {path:'', component:HomeComponent},
+  {path:'', component:LoginPageComponent},
   {path:'doctorSignUp', component:DoctorSignUpComponent},
   {path:'doctorHomePage/:id', component:DoctorHomePageComponent},
   {path:'patientHomePage/:username', component: PatientHomePageComponent},

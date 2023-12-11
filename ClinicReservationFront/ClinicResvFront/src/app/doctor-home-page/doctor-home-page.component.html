@@ -24,7 +24,6 @@
         <div class="table_header">
             <p>My Slots</p>
             <div>
-                <input placeholder="Slot">
                 <div class="wrapper">
                 <button class="add_new" (click)="openPop()">+ Add New</button>
             </div>
@@ -46,8 +45,8 @@
                         <td>{{ slot.StartTime }}</td>
                         <td>{{ slot.EndTime }}</td>
                         <td>
-                            <input type="submit" value="Edit" class="submit" (click)="editSlot(Date, StartTime, EndTime, slotId)">
-                            <button (click)="deleteSlot(slot)"><i class="fas fa-trash"></i></button>
+                            <button (click)="editSlot(slot)"><i class="fas fa-pen-to-square"></i></button>
+        <button (click)="deleteSlot(slot)"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                 </tbody>

@@ -44,7 +44,7 @@ export class DoctorSignUpComponent {
   }
 
   navigateToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
   }
   navigateToHome(){
     this.router.navigate(['./doctorHomePage']);

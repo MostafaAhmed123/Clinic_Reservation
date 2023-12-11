@@ -2,6 +2,7 @@ from datetime import date
 import datetime
 import json
 from pyexpat.errors import messages
+from django.http import Http404
 from pymysql import NULL
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
@@ -17,6 +18,8 @@ from rest_framework import status
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.db import transaction
+
 
 
 
@@ -275,9 +278,24 @@ def choose_slot(request):
             "AppointmentSlotNumber": slot.SlotId,
             "AppointmentPatientID": patient.PatientId,
         }
-
+        appointments = Appointment.objects.filter(
+            AppointmentPatientID=patient.PatientId
+        )
         appointment_serializer = AppointmentSerializer(data=appointment_data)
         if appointment_serializer.is_valid():
+            flag = False
+            for appointment in appointments:
+                slot2 = appointment.AppointmentSlotNumber
+                if (
+                    slot.EndTime <= slot2.EndTime and slot.StartTime >= slot2.StartTime and slot.Date== slot2.Date
+                ): 
+                    print("Hello hanona")
+                    flag = True
+            if flag:
+                return Response(
+                    "Cannot make this appointment, choose another one",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             appointment_serializer.save()
             # Mark the slot as unavailable
             slot.Is_available = False
@@ -292,48 +310,55 @@ def choose_slot(request):
     except Patient.DoesNotExist:
         return Response("Patient not found", status=status.HTTP_404_NOT_FOUND)
     except Slot.DoesNotExist:
-        return Response(
-            "Slot not found or not available", status=status.HTTP_400_BAD_REQUEST
-        )
-
-
+        return Response("Slot not found or not available", status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 @api_view(["DELETE"])
 def cancel_appointment(request):
-    parser = JSONParser().parse(request)
-    patientUsername = parser.get("patientUsername")
-    appointmentId = parser.get("appointmentId")  # Fixed the typo in the variable name
-
     try:
+        # Parse the JSON data from the request
+        data = json.loads(request.body.decode("utf-8"))
+
+        # Extract the relevant parameters
+        patientUsername = data.get("patientUsername")
+        appointmentId = data.get("appointmentId")
+
+        # Retrieve the patient and appointment
         patient = Patient.objects.get(PatientUserName=patientUsername)
         appointment = Appointment.objects.get(
             AppointmentId=appointmentId, AppointmentPatientID=patient
         )
-        slot = appointment.AppointmentSlotNumber  # Retrieve the Slot object
+        slot = appointment.AppointmentSlotNumber
 
         # Check if the slot is available (this may depend on your model structure)
         if slot.Is_available:
-            return Response(
-                "Slot is already available", status=status.HTTP_400_BAD_REQUEST
+            return JsonResponse(
+                {"error": "Slot is already available"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
+
         # Set the slot as available
         slot.Is_available = True
         slot.save()
+
         # Delete the appointment
         appointment.delete()
-        #kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
-        message = {
-            "doctorId": slot.doctorSlotFK,
-            "patientId": patient,
-            "Operation": "ReservationCancelled",
-        }
-       # kafka_producer.produce_message("clinic_reservation", str(message))
-        return Response("Appointment canceled successfully")
+
+        return JsonResponse({"message": "Appointment canceled successfully"})
+
     except Appointment.DoesNotExist:
-        return Response("Appointment Not Found", status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(
+            {"error": "Appointment Not Found"}, status=status.HTTP_400_BAD_REQUEST
+        )
     except Patient.DoesNotExist:
-        return Response("Patient not found", status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse(
+            {"error": "Patient not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return JsonResponse(
+            {"error": f"An error occurred: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 @csrf_exempt
@@ -358,26 +383,53 @@ def getDoctorNotifications(request):
 @csrf_exempt
 @api_view(["PUT"])
 def editAppointment(request):
-    parser = JSONParser().parse(request)
-    appointmentID = parser.get("appointment_id")
-    appointment = Appointment.objects.get(AppointmentId=appointmentID)
-    slot = appointment.AppointmentSlotNumber
-    # slot = Slot.objects.get(SlotId = slotNo)
-    slot.Is_available = True
-    slot.save()
-    slot2 = Slot.objects.get(SlotId=parser.get("slot_id"))
-    appointment.AppointmentSlotNumber = slot2
-    slot2.Is_available = False
-    slot2.save()
-    appointment.save()
-    # kafka_producer = KafkaProducer(settings.KAFKA_CONFIG["bootstrap_servers"])
-    message = {
-        "doctorId": slot.doctorSlotFK,
-        "patientId": appointment.AppointmentPatientID,
-        "Operation": "ReservationUpdated",
-    }
-    # kafka_producer.produce_message("clinic_reservation", str(message))
-    return Response("Appointment edited successfully")
+    try:
+        parser = JSONParser().parse(request)
+        appointment_id = parser.get("appointment_id")
+        new_slot_id = parser.get("slot_id")
+
+        with transaction.atomic():
+            # Retrieve the existing appointment
+            appointment = Appointment.objects.get(AppointmentId=appointment_id)
+
+            # Retrieve the existing slot
+            old_slot = appointment.AppointmentSlotNumber
+            print("Old Slot ID:", old_slot.SlotId)
+
+            # Make the existing slot available
+            old_slot.Is_available = True
+            old_slot.save()
+
+            # Retrieve the new slot
+            new_slot = Slot.objects.get(SlotId=new_slot_id)
+            print("New Slot ID:", new_slot.SlotId)
+
+            # Make the new slot unavailable
+            new_slot.Is_available = False
+            new_slot.save()
+
+            # Update the appointment to reference the new slot
+            print("Appointment Slot before Update:", appointment.AppointmentSlotNumber.SlotId)
+            appointment.AppointmentSlotNumber = new_slot
+            appointment.save()
+            print("Appointment Slot after Update:", appointment.AppointmentSlotNumber.SlotId)
+
+        message = {
+            "doctorId": old_slot.doctorSlotFK,
+            "patientId": appointment.AppointmentPatientID,
+            "Operation": "ReservationUpdated",
+        }
+        # Add your KafkaProducer logic here if needed
+
+        return Response("Appointment edited successfully")
+
+    except Appointment.DoesNotExist:
+        raise Http404("Appointment does not exist")
+    except Slot.DoesNotExist:
+        raise Http404("Slot does not exist")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return Response(f"Error: {str(e)}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @csrf_exempt
@@ -395,10 +447,12 @@ def listPatientReservation(request):
         doctor = slot.doctorSlotFK
 
         appointment_data = {
+            "appointment_id": appointment.AppointmentId,
             "date": slot.Date,
             "start_time": slot.StartTime,
             "end_time": slot.EndTime,
             "doctor_name": doctor.DoctorName,
+            "slot_id" : slot.SlotId,
         }
 
         response_data.append(appointment_data)
