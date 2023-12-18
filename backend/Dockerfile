@@ -7,6 +7,7 @@ COPY requirements.txt .
 ENV DATABASE_PORT=3306
 ENV DATABASE_NAME=clinic
 ENV DATABASE_PASSWORD=Hana.2002
+ENV DatabaseUrl=""
 
 RUN pip install -r requirements.txt
 

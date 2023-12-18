@@ -89,6 +89,12 @@ pymysql.install_as_MySQLdb()
 databaseName = os.environ["DATABASE_NAME"]
 databasePort = os.environ["DATABASE_PORT"]
 databasePassword = os.environ["DATABASE_PASSWORD"]
+databaseHost = os.environ["DatabaseUrl"]
+
+print(databaseName)
+print(databasePort)
+print(databasePassword)
+print(databaseHost)
 
 DATABASES = {
     "default": {
@@ -96,7 +102,7 @@ DATABASES = {
         "NAME": str(databaseName),
         "USER": "root",
         "PASSWORD": str(databasePassword),
-        "HOST": "database",
+        "HOST": str(databaseHost),
         "PORT": str(databasePort),
     }
 }
