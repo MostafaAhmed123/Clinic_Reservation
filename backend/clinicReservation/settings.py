@@ -90,9 +90,10 @@ databaseName = os.environ["DATABASE_NAME"]
 databasePort = os.environ["DATABASE_PORT"]
 databasePassword = os.environ["DATABASE_PASSWORD"]
 databaseHost = os.environ["DatabaseUrl"]
-
+databaseUser = os.environ["DATABASEUser"]
 print(databaseName)
 print(databasePort)
+print(DATABASEUser)
 print(databasePassword)
 print(databaseHost)
 
@@ -100,7 +101,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": str(databaseName),
-        "USER": "root",
+        "USER": str(DATABASEUser),
         "PASSWORD": str(databasePassword),
         "HOST": str(databaseHost),
         "PORT": str(databasePort),
