@@ -86,11 +86,11 @@ import os
 
 pymysql.install_as_MySQLdb()
 
-databaseName = os.environ["DATABASE_NAME"]
-databasePort = os.environ["DATABASE_PORT"]
-databasePassword = os.environ["DATABASE_PASSWORD"]
-databaseHost = os.environ["DatabaseUrl"]
-databaseUser = os.environ["DATABASEUser"]
+databaseName = os.environ.get["DATABASE_NAME"]
+databasePort = os.environ.get["DATABASE_PORT"]
+databasePassword = os.environ.get["DATABASE_PASSWORD"]
+databaseHost = os.environ.get["DatabaseUrl"]
+databaseUser = os.environ.get["DATABASEUser"]
 print(databaseName)
 print(databasePort)
 print(databaseUser)
