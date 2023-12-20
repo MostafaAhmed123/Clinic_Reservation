@@ -93,7 +93,7 @@ databaseHost = os.environ["DatabaseUrl"]
 databaseUser = os.environ["DATABASEUser"]
 print(databaseName)
 print(databasePort)
-print(DATABASEUser)
+print(databaseUser)
 print(databasePassword)
 print(databaseHost)
 
