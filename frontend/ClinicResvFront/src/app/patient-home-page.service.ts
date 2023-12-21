@@ -7,10 +7,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AppointmentService {
-  private apiUrl = 'http://127.0.0.1:8000/patient';
+  private apiUrl = '';
 
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient) {
+    this.apiUrl = this.getBaseURL().API_URL;
+  }
+  getBaseURL(): Observable<any>{
+    return this.http.get<any>('../assets/cofig.json');
+  }
   list_doctor_names_specialties(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/listDoctors`);
   }

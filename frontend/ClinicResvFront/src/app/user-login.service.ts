@@ -7,9 +7,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserLoginService {
-  url = "http://127.0.0.1:8000/user";
+  private url = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.url = this.getBaseURL();
+  }
+  getBaseURL(): Observable<any>{
+    return this.http.get<any>('../assets/cofig.json');
+  }
 
   login(userName: string, password: string): Observable<any> {
     const loginData = {

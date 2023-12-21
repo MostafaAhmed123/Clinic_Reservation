@@ -8,10 +8,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DoctorHomePageService {
-  private baseUrl = 'http://127.0.0.1:8000/doctor';
+  private baseUrl = '';
 
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient) {
+    this.baseUrl = this.getBaseURL().API_URL;
+  }
+  getBaseURL(): Observable<any>{
+    return this.http.get<any>('../assets/cofig.json');
+  }
   createSlot(slotData: any): Observable<any> {
     const url = `${this.baseUrl}/createSlot`;
     return this.http.post(url, slotData);
