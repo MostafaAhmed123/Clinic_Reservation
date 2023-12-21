@@ -1,14 +1,19 @@
-FROM node:latest
+FROM node:latest AS build
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
-RUN npm install
-RUN npm install -g @angular/cli
 COPY . .
+RUN npm install
+RUN npm run build --prod
 
+FROM nginx:latest
 
-EXPOSE 4200
+COPY --chmod=nginx:nginx --from=build /app/dist/clinic-resv-front /usr/share/nginx/html
 
-CMD [ "ng" , "serve", "--host", "0.0.0.0"]
+COPY --chmod=nginx:nginx nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["/bin/sh", "-c", "sed -i 's|{{BACKEND_URL}}|'$BACKEND_URL'|g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
