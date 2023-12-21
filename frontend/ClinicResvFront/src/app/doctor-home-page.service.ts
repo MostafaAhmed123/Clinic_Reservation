@@ -3,24 +3,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorHomePageService {
-  private baseUrl = '';
+  private baseUrl = 'http://127.0.0.1:8000/doctor';
 
-  constructor(private http: HttpClient) {
-    this.getBaseURL().subscribe((url: string) => {
-      this.baseUrl = url;
-    });
-  }
-  getBaseURL(): Observable<string>{
-    return this.http.get<any>('../assets/cofig.json').pipe(
-      map(config => config.API_URL)
-    );
-  }
+  constructor(private http: HttpClient) {}
+
   createSlot(slotData: any): Observable<any> {
     const url = `${this.baseUrl}/createSlot`;
     return this.http.post(url, slotData);
