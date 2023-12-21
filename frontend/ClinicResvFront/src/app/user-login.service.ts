@@ -12,7 +12,7 @@ export class UserLoginService {
   constructor(private http: HttpClient) {
     this.url = this.getBaseURL();
   }
-  getBaseURL(): Observable<any>{
+  getBaseURL(): Observable<string>{
     return this.http.get<any>('../assets/cofig.json');
   }
 

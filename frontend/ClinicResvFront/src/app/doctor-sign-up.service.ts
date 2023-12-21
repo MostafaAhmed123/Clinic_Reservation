@@ -9,9 +9,9 @@ export class DoctorSignUpService {
   private apiUrl = '';
 
   constructor(private http: HttpClient) {
-    this.apiUrl = this.getBaseURL().API_URL;
+    this.apiUrl = this.getBaseURL();
   }
-  getBaseURL(): Observable<any>{
+  getBaseURL(): Observable<string>{
     return this.http.get<any>('../assets/cofig.json');
   }
 
