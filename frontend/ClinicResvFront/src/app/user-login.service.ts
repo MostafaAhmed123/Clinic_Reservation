@@ -13,7 +13,7 @@ export class UserLoginService {
     this.url = this.getBaseURL();
   }
   getBaseURL(): Observable<string>{
-    return this.http.get<any>('../assets/cofig.json');
+    return this.http.get<any>('../assets/cofig.json').API_URL;
   }
 
   login(userName: string, password: string): Observable<any> {

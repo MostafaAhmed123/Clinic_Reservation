@@ -13,7 +13,7 @@ export class PatientSignUpService {
     this.apiUrl = this.getBaseURL();
   }
   getBaseURL(): Observable<string>{
-    return this.http.get<any>('../assets/cofig.json');
+    return this.http.get<any>('../assets/cofig.json').API_URL;
   }
 
   addPatient(patient: any): Observable<any> {

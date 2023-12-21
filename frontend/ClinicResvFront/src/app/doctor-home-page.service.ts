@@ -14,7 +14,7 @@ export class DoctorHomePageService {
     this.baseUrl = this.getBaseURL();
   }
   getBaseURL(): Observable<string>{
-    return this.http.get<any>('../assets/cofig.json');
+    return this.http.get<any>('../assets/cofig.json').API_URL;
   }
   createSlot(slotData: any): Observable<any> {
     const url = `${this.baseUrl}/createSlot`;

@@ -13,7 +13,7 @@ export class AppointmentService {
     this.apiUrl = this.getBaseURL();
   }
   getBaseURL(): Observable<string>{
-    return this.http.get<any>('../assets/cofig.json');
+    return this.http.get<any>('../assets/cofig.json').API_URL;
   }
   list_doctor_names_specialties(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/listDoctors`);
