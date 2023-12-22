@@ -49,13 +49,7 @@ export class AppointmentService {
 
 cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
     const url = `${this.url}/api/patient/cancelAppointment`;
-    const cancelData = {
-      patientUsername: patientUsername,
-      appointmentId: appointmentId,
-    };
-  
-    return this.http.delete(url, { body: cancelData });
+    return this.http.delete(url, { body: { patientUsername, appointmentId } });
   }
-
 }
 
