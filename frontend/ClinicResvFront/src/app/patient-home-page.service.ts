@@ -52,8 +52,8 @@ export class AppointmentService {
       patientUsername: patientUsername,
       appointmentId: appointmentId,
     };
-    console.log('Request Payload:', cancelData); // Log the payload
-    return this.http.delete(`${this.url}/api/patient/cancelAppointment`,  cancelData);
+
+    return this.http.delete(`${this.url}/api/patient/cancelAppointment`, { body: cancelData });
   }
 }
 
