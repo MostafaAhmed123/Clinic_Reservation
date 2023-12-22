@@ -27,7 +27,7 @@ export class LoginPageComponent {
           console.log(response);
 
           // Handle the response here, e.g., set user login status or show a message.
-          this.toastr.success(environment.BACKEND_URL, 'Success');
+          console.log(environment.BACKEND_URL.toString())
           if (response.Type == "Doctor") {
             this.toastr.success('Login successful!', 'Success');
 
