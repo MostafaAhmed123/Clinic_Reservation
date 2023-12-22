@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import  {UserLoginService} from '../user-login.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environment/environment';
 
 
 @Component({
@@ -19,11 +20,13 @@ export class LoginPageComponent {
     ) {}
     login(event: Event) {
       event.preventDefault(); // Prevent the default form submission behavior
+      console.log(environment.BACKEND_URL);
       this.userLoginService.login(this.username, this.password).subscribe(
         (response) => {
           const id= response.ID;
           const username = response.Username;
           console.log(response);
+
           // Handle the response here, e.g., set user login status or show a message.
           if (response.Type == "Doctor") {
             this.toastr.success('Login successful!', 'Success');
