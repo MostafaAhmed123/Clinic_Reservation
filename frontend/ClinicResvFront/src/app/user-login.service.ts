@@ -10,7 +10,7 @@ export class UserLoginService {
   url = environment.BACKEND_URL;
 
   constructor(private http: HttpClient) {
-    console.log("Backend BaseURL: ", this.url);
+    console.log(environment.BACKEND_URL);
   }
 
   login(userName: string, password: string): Observable<any> {
