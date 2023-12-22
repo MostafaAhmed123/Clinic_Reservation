@@ -48,12 +48,12 @@ export class AppointmentService {
   }
 
   cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
-    const body = {
+    const cancelData = {
       patientUsername: patientUsername,
       appointmentId: appointmentId,
     };
-
-    return this.http.delete(`${this.url}/api/patient/cancelAppointment`,  body );
+    console.log('Request Payload:', cancelData); // Log the payload
+    return this.http.delete(`${this.url}/api/patient/cancelAppointment`,  cancelData);
   }
 }
 
