@@ -5,8 +5,8 @@ Youssef Essmat: 20206096
 We are supposed to design and develop a full stack clinic reservation system using Python, Angular, and MySQL.
 
 ## **URLs**
-|         Title         Link                                                                     |
-| :--------------------: ------------------------------------------------------------------------|
-| Database `https://mysqlpod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com`     |
-| Backend  `https://backend-pod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com`  |
-| Frontend `https://frontend-pod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com` |
+| Title       | Link                                                                     |
+| ----------- | ------------------------------------------------------------------------ |
+| Database    | [https://mysqlpod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com](https://mysqlpod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com)     |
+| Backend     | [https://backend-pod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com](https://backend-pod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com)  |
+| Frontend    | [https://frontend-pod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com](https://frontend-pod-mostafaahmed-123-dev.apps.sandbox-m3.1530.p1.openshiftapps.com) |
