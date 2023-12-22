@@ -2,18 +2,23 @@ FROM node:latest AS build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
 
 COPY . .
 RUN npm install
 RUN npm run build --prod
 
-FROM nginx:latest
+FROM nginxinc/nginx-unprivileged:latest
 
-COPY --from=build /app/dist/clinic-resv-front /usr/share/nginx/html
+USER root
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --chown=nginx:nginx --from=build /app/dist/clinic-resv-front /var/www/html
 
-EXPOSE 80
+COPY --chown=nginx:nginx nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD ["/bin/sh", "-c", "sed -i 's|{{BACKEND_URL}}|'$BACKEND_URL'|g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+COPY --chown=nginx:nginx ./entry.sh /etc/nginx/conf.d/entry.sh
+RUN chmod +x /etc/nginx/conf.d/entry.sh
+
+USER nginx
+
+CMD ["/bin/sh", "-c","/etc/nginx/conf.d/entry.sh && nginx -g 'daemon off;'"]

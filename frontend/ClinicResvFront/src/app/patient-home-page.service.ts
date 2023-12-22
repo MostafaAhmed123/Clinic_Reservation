@@ -2,21 +2,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {environment} from '../environment/environment'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppointmentService {
-  private apiUrl = 'http://127.0.0.1:8000/patient';
+  url = environment.BACKEND_URL;
 
   constructor(private http: HttpClient) {}
 
   list_doctor_names_specialties(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/listDoctors`);
+    return this.http.get<any[]>(`${this.url}/api/patient/listDoctors`);
   }
 
   getAvailableDoctors(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/listDoctors`);
+    return this.http.get<any[]>(`${this.url}/api/patient/listDoctors`);
   }
 
   choose_slot(patient_username: string, slot_id: number): Observable<any> {
@@ -26,15 +27,15 @@ export class AppointmentService {
     };
     console.log('Request Payload:', appointmentData); // Log the payload
 
-    return this.http.post(`${this.apiUrl}/chooseSlot`, appointmentData);
+    return this.http.post(`${this.url}/api/patient/chooseSlot`, appointmentData);
   }
 
   viewDoctorSlots(doctorId: number): Observable<any[]> {
-    const url = `${this.apiUrl}/viewDoctorSlots`;
+    const url = `${this.url}/api/patient/viewDoctorSlots`;
     return this.http.get<any[]>(`${url}?doctorId=${doctorId}`);
   }
   list_patient_reservations(patient_username: string): Observable<any[]> {
-    const url = `${this.apiUrl}/listReservations`;
+    const url = `${this.url}/api/patient/listReservations`;
     return this.http.get<any[]>(`${url}?patient_username=${patient_username}`);
   }
   editAppointment(appointment_id: number, new_slot_id :number): Observable<any> {
@@ -43,7 +44,7 @@ export class AppointmentService {
       slot_id: new_slot_id
     };
     console.log(body)
-    return this.http.put(`${this.apiUrl}/editAppointment`, body);
+    return this.http.put(`${this.url}/api/patient/editAppointment`, body);
   }
 
   cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
@@ -52,7 +53,7 @@ export class AppointmentService {
       appointmentId: appointmentId,
     };
 
-    return this.http.delete(`${this.apiUrl}/cancelAppointment`, { body: cancelData });
+    return this.http.delete(`${this.url}/api/patient/cancelAppointment`, { body: cancelData });
   }
 }
 
