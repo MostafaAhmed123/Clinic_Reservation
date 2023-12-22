@@ -2,21 +2,19 @@ FROM node:latest AS build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
 
 COPY . .
 RUN npm install
 RUN npm run build --prod
 
-FROM nginx:latest
+FROM nginxinc/nginx-unprivileged:latest
 
-COPY --from=build /app/dist/clinic-resv-front /usr/share/nginx/html
+COPY --from=build /app/dist/clinic-resv-front /var/www/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN chmod 755 /etc/nginx/conf.d/
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY ./entry.sh /etc/nginx/conf.d/entry.sh
 EXPOSE 80
 
-CMD ["/entrypoint.sh"]
+CMD ["/bin/sh", "-c","/etc/nginx/conf.d/entry.sh && nginx -g 'daemon off;'"]

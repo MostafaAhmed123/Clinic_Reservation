@@ -2,12 +2,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import {environment} from '../environment/environment'
 @Injectable({
   providedIn: 'root'
 })
 export class UserLoginService {
-  url = "/api";
+  url = environment.BACKEND_URL;
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +17,6 @@ export class UserLoginService {
       password: password
     };
 
-    return this.http.post(`${this.url}/login`, loginData);
+    return this.http.post(`${this.url}/api/user/login`, loginData);
   }
 }

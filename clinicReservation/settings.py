@@ -148,13 +148,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://localhost:53972",
     "http://localhost:58974",
-    # Add other allowed origins here if needed
+    "http://frontend:80",
+    "http://frontend:3800",
+    "http://localhost:3800"
 ]
 
 
