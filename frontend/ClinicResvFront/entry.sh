@@ -12,3 +12,4 @@ NGINX_CONF="/etc/nginx/conf.d/default.conf"
 sed -i "s|proxy_pass .*;|proxy_pass $BACKEND_URL;|g" $NGINX_CONF
 
 echo "nginx.conf has been updated."
+echo "backend is up and running  $BACKEND_URL"
