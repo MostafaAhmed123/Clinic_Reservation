@@ -96,6 +96,7 @@ print(databasePort)
 print(databaseUser)
 print(databasePassword)
 print(databaseHost)
+print(frontendURL)
 
 DATABASES = {
     "default": {
