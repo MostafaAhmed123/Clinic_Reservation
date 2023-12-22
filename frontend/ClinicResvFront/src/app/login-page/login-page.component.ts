@@ -27,13 +27,14 @@ export class LoginPageComponent {
           console.log(response);
 
           // Handle the response here, e.g., set user login status or show a message.
+          this.toastr.success(environment.BACKEND_URL, 'Success');
           if (response.Type == "Doctor") {
             this.toastr.success('Login successful!', 'Success');
-            console.log(environment.BACKEND_URL);
+
             this.router.navigate(['/doctorHomePage',id]);
           } else if (response.Type == "Patient") {
             this.toastr.success('Login successful!', 'Success');
-            console.log(environment.BACKEND_URL);
+
             this.router.navigate(['/patientHomePage', username]);
           } else {
             this.toastr.error('Login failed. Please check your credentials!', 'Error');
