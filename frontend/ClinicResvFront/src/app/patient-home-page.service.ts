@@ -54,6 +54,7 @@ export class AppointmentService {
     };
 
     return this.http.delete(`${this.url}/api/patient/cancelAppointment`, { body: cancelData });
+
   }
 }
 
