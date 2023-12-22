@@ -20,7 +20,6 @@ export class LoginPageComponent {
     ) {}
     login(event: Event) {
       event.preventDefault(); // Prevent the default form submission behavior
-      console.log(environment.BACKEND_URL);
       this.userLoginService.login(this.username, this.password).subscribe(
         (response) => {
           const id= response.ID;
@@ -37,6 +36,7 @@ export class LoginPageComponent {
           } else {
             this.toastr.error('Login failed. Please check your credentials!', 'Error');
           }
+          console.log(environment.BACKEND_URL);
         },
         (error) => {
           console.log("An error occurred");
