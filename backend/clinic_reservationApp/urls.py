@@ -29,5 +29,5 @@ urlpatterns = [
     re_path(r"^api/user/getCurrentUser$", views.getUser),
     re_path(r"^api/doctor/getNotifications$", views.getDoctorNotifications),
     re_path(r"^api/doctor/editSlot$", views.editSlot),
-    re_path(r"^api/patient/cancelAppointment", views.cancel_appointment)
+    re_path(r"^api/patient/cancelAppointment$", views.cancel_appointment)
 ]
