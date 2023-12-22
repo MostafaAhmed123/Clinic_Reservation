@@ -21,6 +21,4 @@ RUN chmod +x /etc/nginx/conf.d/entry.sh
 
 USER nginx
 
-EXPOSE 80
-
 CMD ["/bin/sh", "-c","/etc/nginx/conf.d/entry.sh && nginx -g 'daemon off;'"]
