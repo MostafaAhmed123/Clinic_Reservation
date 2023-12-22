@@ -47,14 +47,9 @@ export class AppointmentService {
     return this.http.put(`${this.url}/api/patient/editAppointment`, body);
   }
 
-  cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
-    const cancelData = {
-      patientUsername: patientUsername,
-      appointmentId: appointmentId,
-    };
-
-    return this.http.delete(`${this.url}/api/patient/cancelAppointment`, { body: cancelData });
-
-  }
+cancelAppointment(patientUsername: string, appointmentId: number): Observable<any> {
+  const url = `${this.url}/api/patient/cancelAppointment?patientUsername=${patientUsername}&appointmentId=${appointmentId}`;
+  return this.http.delete(url);
+}
 }
 
