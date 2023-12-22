@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import  {UserLoginService} from '../user-login.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
-import {environment} from '../../environment/environment';
+
 
 @Component({
   selector: 'app-login-page',
@@ -16,9 +16,7 @@ export class LoginPageComponent {
   loginForm: any;
 
   constructor(private router: Router, private userLoginService: UserLoginService,  private toastr: ToastrService,
-    ) {
-      this.toastr.success(environment.BACKEND_URL);
-    }
+    ) {}
     login(event: Event) {
       event.preventDefault(); // Prevent the default form submission behavior
       this.userLoginService.login(this.username, this.password).subscribe(

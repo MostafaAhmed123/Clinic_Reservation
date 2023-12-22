@@ -18,7 +18,7 @@ export class UserLoginService {
       username: userName,
       password: password
     };
-
+    console.log(this.url);
     return this.http.post(`${this.url}/api/user/login`, loginData);
   }
 }
