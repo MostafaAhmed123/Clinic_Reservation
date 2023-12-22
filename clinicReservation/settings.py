@@ -156,7 +156,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:58974",
     "http://frontend:80",
     "http://frontend:3800",
-    "http://localhost:3800"
+    "http://localhost:3800",
+    "https://frontend-hannaayman-dev.apps.sandbox-m4.g2pi.p1.openshiftapps.com"
 ]
 
 
